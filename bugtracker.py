@@ -98,21 +98,20 @@ def usage(args):
     exit()
 
 
-def main():
+def main(options):
     """Parses user inputs and passes them to an PGP importer."""
-    options = get_options()
-
     check_options_for_tests(options)
 
     tools_provider = ToolsProvider()
     check_directory_options(tools_provider, options)
-    analyzer = Analyzer()
-    configure_analyzer(analyzer, options)
-    annotator = Annotator()
+    annotator = Annotator(tools_provider)
     configure_annotator(annotator, options)
+    analyzer = Analyzer(tools_provider, annotator)
+    configure_analyzer(analyzer, options)
 
-    #TODO(fhorschig): Start processing.
+    analyzer.start_processing()
+    annotator.save_as_turtle()
 
 
 if __name__ == '__main__':
-    main()
+    main(get_options())

@@ -1,12 +1,15 @@
 #pylint: disable=missing-docstring, invalid-name, R0904
 
 import unittest
-from .analyzer import Analyzer
-
+from analyzer import Analyzer
+from annotations.annotator import Annotator
+from helper.toolsprovider import ToolsProvider
 
 class TestAnalyzer(unittest.TestCase):
     def setUp(self):
-        self.analyzer = Analyzer()
+        self.tools_provider = ToolsProvider()
+        self.annotator = Annotator(self.tools_provider)
+        self.analyzer = Analyzer(self.tools_provider, self.annotator)
 
 
     def test_can_create(self):
