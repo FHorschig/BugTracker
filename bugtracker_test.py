@@ -6,19 +6,17 @@ import unittest
 from annotations.annotator_test import TestAnnotator
 from imageprocessing.analyzer_test import TestAnalyzer
 from helper.toolsprovider_test import TestToolsProvider
-from bugtracker import main
 
 
 class TestBugTracker(unittest.TestCase):
     def test_executes_without_error(self):
-        main([])
+        main()
         assert True
 
 
 def execute_all_tests():
     """Runs all known tests."""
     unittest.TextTestRunner(verbosity=2).run(unittest.TestSuite([
-        unittest.TestLoader().loadTestsFromTestCase(TestBugTracker),
         unittest.TestLoader().loadTestsFromTestCase(TestAnnotator),
         unittest.TestLoader().loadTestsFromTestCase(TestAnalyzer),
         unittest.TestLoader().loadTestsFromTestCase(TestToolsProvider)]))
