@@ -20,8 +20,7 @@ class Annotator(object):
         """Saves the internal data as turtle file or prints it as String."""
         if as_string:
             return self.__get_prefixes_and_bugs()
-        with open("test.txt", "w") as text_file:
-            text_file.write(self.__get_prefixes_and_bugs())
+        self.__tools_provider.write_out(self.__get_prefixes_and_bugs())
 
 
     def __get_prefixes_and_bugs(self):
