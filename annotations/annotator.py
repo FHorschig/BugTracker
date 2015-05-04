@@ -1,5 +1,7 @@
 """Provides a class that creates annotations out of an image analysis."""
 
+from bug import Bug
+
 
 class Annotator(object):
     """Provides methods to create annotation files."""
@@ -12,10 +14,7 @@ class Annotator(object):
 
     def add_found_bug(self, image_file, x, y, w, h):
         """Drawn a box around a bug? Tel me with this method"""
-        self.__bugs.append(\
-            "<" + image_file + "#x=" + str(x) + "&y=" + str(y) +\
-            "&w=" + str(w) + "&h=" + str(h) + ">" +\
-            " a dwc:Organism .")
+        self.__bugs.append(Bug(image_file, x, y, w, h).as_turtle())
 
     def save_as_turtle(self, as_string=True):
         """Saves the internal data as turtle file."""
