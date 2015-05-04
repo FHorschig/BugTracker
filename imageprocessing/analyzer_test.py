@@ -9,7 +9,7 @@ class TestAnalyzer(unittest.TestCase):
     def setUp(self):
         self.tools_provider = ToolsProvider()
         self.annotator = Annotator(self.tools_provider)
-        self.analyzer = Analyzer(self.tools_provider, self.annotator)
+        self.analyzer = Analyzer(self.annotator)
 
 
     def test_can_create(self):
