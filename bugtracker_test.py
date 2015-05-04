@@ -1,19 +1,20 @@
+#pylint: disable=missing-docstring, invalid-name, R0904, W0403, F0401
 """Provides a function that runs all known tests."""
 
 import unittest
 
-
+from bugtracker import main
+from bugtracker import get_arg_parser
 from annotations.annotator_test import TestAnnotator
 from annotations.bug_test import TestBug
 from imageprocessing.analyzer_test import TestAnalyzer
 from helper.toolsprovider_test import TestToolsProvider
-from bugtracker import main
 
 
 class TestBugTracker(unittest.TestCase):
-    def test_executes_without_error(self):
-        main([])
-        assert True
+    def test_exits_normally_on_dry_run(self):
+        with self.assertRaises(SystemExit):
+            main(get_arg_parser().parse_args(["--dry_run"]))
 
 
 def execute_all_tests():
