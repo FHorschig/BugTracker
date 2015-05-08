@@ -43,7 +43,8 @@ def main():
     annotator = Annotator(tools_provider)
 
     analyzer = ip.Analyzer(annotator)
-    method = ip.Thresholding()
+    # method = ip.Thresholding()
+    method = ip.TemplateMatching()
     file = os.path.join(DIR, args.FILE)
 
     analyzer.process(file, method)
