@@ -45,6 +45,7 @@ def main():
     analyzer = ip.Analyzer(annotator)
     # method = ip.Thresholding()
     method = ip.TemplateMatching()
+    # method = ip.TemplateMatchingWithThresholding()
     file = os.path.join(DIR, args.FILE)
 
     analyzer.process(file, method)
