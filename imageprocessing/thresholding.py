@@ -1,11 +1,12 @@
 import cv2
 import numpy as np
+from annotations.bug import Bug
 
 
 
 class Thresholding(object):
 
-    def process(self, img):
+    def process(self, annotator, img):
         image = img.copy()
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -32,6 +33,8 @@ class Thresholding(object):
             # ellipse = cv2.fitEllipse(cnt)
             # cv2.ellipse(image, ellipse, (0,255,0), 2)
 
+            x, y, w, h = cv2.boundingRect(cnt)
+            annotator.add_bug(Bug(':img', x, y, w, h))
             for point in cnt:
                 cv2.circle(image, tuple(point[0]), 2, (255-i,(120+i)%255,i))
 

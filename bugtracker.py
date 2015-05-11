@@ -64,7 +64,7 @@ def main(args):
     method = ip.Thresholding()
     # method = ip.TemplateMatching()
     # method = ip.TemplateMatchingWithThresholding()
-    file = os.path.join(DIR, args.FILE)
+    file = os.path.join(DIR, args.file)
 
     analyzer.process(file, method)
     annotator.save_as_turtle()
