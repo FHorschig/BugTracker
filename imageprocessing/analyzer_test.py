@@ -1,5 +1,4 @@
-#pylint: disable=missing-docstring, invalid-name, R0904
-
+#pylint: disable=missing-docstring, invalid-name, R0904, W0403, F0401
 import unittest
 from analyzer import Analyzer
 from annotations.annotator import Annotator
