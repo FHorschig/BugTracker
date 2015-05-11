@@ -1,9 +1,10 @@
 import cv2
 import numpy as np
+from annotations.bug import Bug
 
 class TemplateMatching(object):
 
-    def process(self, img):
+    def process(self, annotator, img):
         methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
@@ -20,6 +21,7 @@ class TemplateMatching(object):
         loc = np.where( res >= threshold)
 
         for pt in zip(*loc[::-1]):
+            annotator.add_bug(Bug('img', pt[0], pt[1], w, h))
             cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 1)
             
         return img_rgb
@@ -27,7 +29,7 @@ class TemplateMatching(object):
 
 class TemplateMatchingWithThresholding(object):
 
-    def process(self, img):
+    def process(self, annotator, img):
         image = img.copy()
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -54,6 +56,7 @@ class TemplateMatchingWithThresholding(object):
         loc = np.where( res >= threshold)
 
         for pt in zip(*loc[::-1]):
+            annotator.add_bug(Bug('img', pt[0], pt[1], w, h))
             cv2.rectangle(image, pt, (pt[0] + w, pt[1] + h), (0,0,255), 1)
 
 

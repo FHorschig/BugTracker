@@ -15,7 +15,7 @@ class Analyzer(object):
         """Extracts features and stores findings into given annotator."""
 
         image = cv2.imread(file)
-        result = method.process(image)
+        result = method.process(self.__annotator, image)
 
         cv2.imshow('Image', result)
         cv2.waitKey()
