@@ -5,17 +5,14 @@ class Bug(object):
     """Stores information about a found Bug."""
 
 
-    def __init__(self, image_url, x, y, w, h):
+    def __init__(self, image_url, bounding_box):
         self.__image_url = image_url
-        self.__x = x
-        self.__y = y
-        self.__w = w
-        self.__h = h
+        self.__x, self.__y, self.__w, self.__h = bounding_box
 
 
     def as_turtle(self):
         """Drawn a box around a bug? Tel me with this method"""
-        return "<" + self.__image_url + \
+        return "\n<" + self.__image_url + \
                    "#x=" + str(self.__x) +\
                    "&y=" + str(self.__y) +\
                    "&w=" + str(self.__w) +\

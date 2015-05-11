@@ -4,14 +4,13 @@ import os
 import argparse
 import imageprocessing as ip
 from annotations.annotator import Annotator
-from helper.toolsprovider import ToolsProvider
+from helper.iohelper import IOHelper
 
 
 DIR = os.path.dirname(os.path.realpath(__file__))
 
 DEFAULT_OUTPUT_DIR = os.path.join(DIR, 'out')
-DEFAULT_WORKING_DIR = os.path.join(DIR, 'out')
-DEFAULT_TOOLS_DIR = '~/opencv'
+DEFAULT_CACHE_DIR = os.path.join(DIR, 'cache')
 
 
 def get_arg_parser():
@@ -20,14 +19,11 @@ def get_arg_parser():
     parser.add_argument('--dry_run', action='store_true', help='Avoids IO.')
     parser.add_argument('-t', '--test', action='store_true',
                         help='Execute all tests and exit')
-    parser.add_argument('-w', '--working_directory',
+    parser.add_argument('-c', '--cache_directory',
                         help='The directory where temporary files are stored.',
                         metavar='')
     parser.add_argument('-o', '--output_directory',
                         help='The directory where  annotations are stored.',
-                        metavar='')
-    parser.add_argument('--tools_directory',
-                        help='The directory where tools are located.',
                         metavar='')
     parser.add_argument('-f', '--file', help='Process file')
     return parser
@@ -47,26 +43,23 @@ def main(args):
         execute_all_tests()
         exit(0)
 
-    tools_provider = ToolsProvider()
-    tools_provider.set_working_directory(
-        os.path.join(DIR, args.working_directory) if args.working_directory
-        else DEFAULT_WORKING_DIR)
-    tools_provider.set_output_directory(
+    iohelper = IOHelper()
+    iohelper.set_cache_directory(
+        os.path.join(DIR, args.cache_directory) if args.cache_directory
+        else DEFAULT_CACHE_DIR)
+    iohelper.set_output_directory(
         os.path.join(DIR, args.output_directory) if args.output_directory
         else DEFAULT_OUTPUT_DIR)
-    tools_provider.set_tools_directory(
-        os.path.join(DIR, args.tools_directory) if args.tools_directory
-        else DEFAULT_TOOLS_DIR)
+    iohelper.select_file(args.file)
 
-    annotator = Annotator(tools_provider)
+    annotator = Annotator(iohelper)
 
-    analyzer = ip.Analyzer(annotator)
+    analyzer = ip.Analyzer(annotator, iohelper)
     method = ip.Thresholding()
     # method = ip.TemplateMatching()
     # method = ip.TemplateMatchingWithThresholding()
-    file = os.path.join(DIR, args.file)
 
-    analyzer.process(file, method)
+    analyzer.process(method)
     annotator.save_as_turtle()
 
 

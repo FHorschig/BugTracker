@@ -2,13 +2,13 @@
 import unittest
 from analyzer import Analyzer
 from annotations.annotator import Annotator
-from helper.toolsprovider import ToolsProvider
+from helper.iohelper import IOHelper
 
 class TestAnalyzer(unittest.TestCase):
     def setUp(self):
-        self.tools_provider = ToolsProvider()
-        self.annotator = Annotator(self.tools_provider)
-        self.analyzer = Analyzer(self.annotator)
+        self.iohelper = IOHelper()
+        self.annotator = Annotator(self.iohelper)
+        self.analyzer = Analyzer(self.annotator, self.iohelper)
 
 
     def test_can_create(self):

@@ -3,16 +3,18 @@
 import unittest
 from annotator import Annotator
 from bug import Bug
-from helper.toolsprovider import ToolsProvider
+from helper.iohelper import IOHelper
 
 
 class TestAnnotator(unittest.TestCase):
-    BUG = Bug("bug.jpg", 100, 10, 30, 50)
-    PREFIXES = "@prefix dwc: <http://rs.tdwg.org/dwc/terms/#> .\n"
+    BUG_BOUNDING_BOX = (100, 10, 30, 50)
+    PREFIXES = "@prefix dwc: <http://rs.tdwg.org/dwc/terms/#> .\n" +\
+               "@prefix img: <test.jpg> .\n"
 
     def setUp(self):
-        self.tools_provider = ToolsProvider()
-        self.annotator = Annotator(self.tools_provider)
+        self.iohelper = IOHelper()
+        self.annotator = Annotator(self.iohelper)
+        self.iohelper.select_file('test.jpg')
 
 
     def test_can_create(self):
@@ -26,10 +28,10 @@ class TestAnnotator(unittest.TestCase):
 
 
     def test_includes_added_organism_into_turtle(self):
-        self.annotator.add_bug(TestAnnotator.BUG)
+        self.annotator.add_bug(*TestAnnotator.BUG_BOUNDING_BOX)
         self.assertEqual(self.annotator.save_as_turtle(as_string=True), \
             TestAnnotator.PREFIXES + \
-            TestAnnotator.BUG.as_turtle())
+            Bug('img', TestAnnotator.BUG_BOUNDING_BOX).as_turtle())
 
 
 if __name__ == '__main__':

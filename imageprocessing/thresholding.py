@@ -32,8 +32,7 @@ class Thresholding(object):
             # ellipse = cv2.fitEllipse(cnt)
             # cv2.ellipse(image, ellipse, (0,255,0), 2)
 
-            x, y, w, h = cv2.boundingRect(cnt)
-            annotator.add_bug(Bug(':img', x, y, w, h))
+            annotator.add_bug(*cv2.boundingRect(cnt))
             for point in cnt:
                 cv2.circle(image, tuple(point[0]), 2, (255-i,(120+i)%255,i))
 

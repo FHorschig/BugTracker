@@ -8,7 +8,7 @@ from bugtracker import get_arg_parser
 from annotations.annotator_test import TestAnnotator
 from annotations.bug_test import TestBug
 from imageprocessing.analyzer_test import TestAnalyzer
-from helper.toolsprovider_test import TestToolsProvider
+from helper.iohelper_test import TestIOHelper
 
 
 class TestBugTracker(unittest.TestCase):
@@ -24,7 +24,7 @@ def execute_all_tests():
         unittest.TestLoader().loadTestsFromTestCase(TestBug),
         unittest.TestLoader().loadTestsFromTestCase(TestAnnotator),
         unittest.TestLoader().loadTestsFromTestCase(TestAnalyzer),
-        unittest.TestLoader().loadTestsFromTestCase(TestToolsProvider)]))
+        unittest.TestLoader().loadTestsFromTestCase(TestIOHelper)]))
 
 
 if __name__ == '__main__':

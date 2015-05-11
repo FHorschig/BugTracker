@@ -8,24 +8,25 @@ class Annotator(object):
     __PREFIXES = ["@prefix dwc: <http://rs.tdwg.org/dwc/terms/#> ."]
 
 
-    def __init__(self, tools_provider):
-        self.__tools_provider = tools_provider
+    def __init__(self, iohelper):
+        self.__iohelper = iohelper
         self.__bugs = []
 
-    def add_bug(self, bug):
+    def add_bug(self, x, y, w, h):
         """Drawn a box around a bug? Tel me with this method"""
-        self.__bugs.append(bug)
+        self.__bugs.append(Bug('img', (x, y, w, h)))
 
     def save_as_turtle(self, as_string=False):
         """Saves the internal data as turtle file or prints it as String."""
         if as_string:
             return self.__get_prefixes_and_bugs()
-        self.__tools_provider.write_out(self.__get_prefixes_and_bugs())
+        self.__iohelper.write_out(self.__get_prefixes_and_bugs())
 
 
     def __get_prefixes_and_bugs(self):
         """Returns prefixes and bugs concatenated and ready to save. """
         return "\n".join(Annotator.__PREFIXES) +\
+               "\n@prefix img: <" + self.__iohelper.uri() + "> ."+\
                "\n" +\
                "\n".join(self.__convert_bugs_to_turtle())
 

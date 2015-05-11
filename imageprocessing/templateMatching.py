@@ -21,9 +21,9 @@ class TemplateMatching(object):
         loc = np.where( res >= threshold)
 
         for pt in zip(*loc[::-1]):
-            annotator.add_bug(Bug('img', pt[0], pt[1], w, h))
+            annotator.add_bug(pt[0], pt[1], w, h)
             cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 1)
-            
+
         return img_rgb
 
 
@@ -56,7 +56,7 @@ class TemplateMatchingWithThresholding(object):
         loc = np.where( res >= threshold)
 
         for pt in zip(*loc[::-1]):
-            annotator.add_bug(Bug('img', pt[0], pt[1], w, h))
+            annotator.add_bug(pt[0], pt[1], w, h)
             cv2.rectangle(image, pt, (pt[0] + w, pt[1] + h), (0,0,255), 1)
 
 
