@@ -2,7 +2,7 @@
 #pylint: disable=missing-docstring, W0403, F0401
 import os
 import argparse
-from imageprocessing.analyzer import Analyzer
+import imageprocessing as ip
 from annotations.annotator import Annotator
 from helper.toolsprovider import ToolsProvider
 
@@ -59,9 +59,14 @@ def main(args):
         else DEFAULT_TOOLS_DIR)
 
     annotator = Annotator(tools_provider)
-    analyzer = Analyzer(annotator)
 
-    analyzer.process(os.path.join(DIR, args.FILE))
+    analyzer = ip.Analyzer(annotator)
+    method = ip.Thresholding()
+    # method = ip.TemplateMatching()
+    # method = ip.TemplateMatchingWithThresholding()
+    file = os.path.join(DIR, args.FILE)
+
+    analyzer.process(file, method)
     annotator.save_as_turtle()
 
 
