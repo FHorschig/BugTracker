@@ -17,7 +17,12 @@ class Thresholding(object):
         closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel, iterations=2)
 
         cont_img = closing.copy()
-        _,contours, hierarchy = cv2.findContours(cont_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if int(cv2.__version__[0]) < 3:
+            contours, _ = cv2.findContours(\
+                    cont_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        else:
+            _, contours, _ = cv2.findContours(\
+                    cont_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         i = 0
         for cnt in contours:
