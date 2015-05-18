@@ -33,17 +33,11 @@ def get_args():
     return get_arg_parser().parse_args()
 
 
-def main(args):
-    """Function that get called on execution."""
-    if args.dry_run:
-        exit(0)
-
-    if args.test:
-        from bugtracker_test import execute_all_tests
-        execute_all_tests()
-        exit(0)
-
+def configure_iohelper(args):
+    """ Creates and sets up an IOHelper according to parsed args."""
     iohelper = IOHelper()
+    if args.dry_run:
+        iohelper.set_dry_run(True)
     iohelper.set_cache_directory(
         os.path.join(DIR, args.cache_directory) if args.cache_directory
         else DEFAULT_CACHE_DIR)
@@ -51,16 +45,29 @@ def main(args):
         os.path.join(DIR, args.output_directory) if args.output_directory
         else DEFAULT_OUTPUT_DIR)
     iohelper.select_file(args.file)
+    return iohelper
 
+
+def main(args):
+    """Function that get called on execution."""
+    if args.test:
+        from bugtracker_test import execute_all_tests
+        execute_all_tests()
+        exit(0)
+
+    iohelper = configure_iohelper(args)
     annotator = Annotator(iohelper)
 
     analyzer = ip.Analyzer(annotator, iohelper)
-    method = ip.Thresholding()
-    # method = ip.TemplateMatching()
-    # method = ip.TemplateMatchingWithThresholding()
+    if args.dry_run:
+        exit(0)
+    analyzer.process(method=ip.Thresholding())
+    # analyzer.process(method=ip.TemplateMatching())
+    # analyzer.process(method=ip.TemplateMatchingWithThresholding())
 
-    analyzer.process(method)
     annotator.save_as_turtle()
+
+    exit(0)
 
 
 if __name__ == '__main__':

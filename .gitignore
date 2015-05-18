@@ -1,6 +1,5 @@
 cache/
 out/
-test/
-temp/
+testing/out/
 *.pyc
 *.jpg

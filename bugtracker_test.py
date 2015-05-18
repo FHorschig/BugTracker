@@ -9,12 +9,15 @@ from annotations.annotator_test import TestAnnotator
 from annotations.bug_test import TestBug
 from imageprocessing.analyzer_test import TestAnalyzer
 from helper.iohelper_test import TestIOHelper
+from testing.testfiles import TestFiles
 
 
 class TestBugTracker(unittest.TestCase):
     def test_exits_normally_on_dry_run(self):
         with self.assertRaises(SystemExit):
-            main(get_arg_parser().parse_args(["--dry_run"]))
+            main(get_arg_parser().parse_args(
+                ["--dry_run",
+                 "-f " + TestFiles.IMG]))
 
 
 def execute_all_tests():

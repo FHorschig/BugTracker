@@ -11,7 +11,7 @@ class Bug(object):
 
 
     def as_turtle(self):
-        """Drawn a box around a bug? Tel me with this method"""
+        """Drawn a box around a bug? Tell me with this method"""
         return "\n<" + self.__image_url + \
                    "#x=" + str(self.__x) +\
                    "&y=" + str(self.__y) +\

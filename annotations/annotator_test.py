@@ -2,19 +2,12 @@
 
 import unittest
 from annotator import Annotator
-from bug import Bug
-from helper.iohelper import IOHelper
+from testing.testfiles import TestFiles
 
 
 class TestAnnotator(unittest.TestCase):
-    BUG_BOUNDING_BOX = (100, 10, 30, 50)
-    PREFIXES = "@prefix dwc: <http://rs.tdwg.org/dwc/terms/#> .\n" +\
-               "@prefix img: <test.jpg> .\n"
-
     def setUp(self):
-        self.iohelper = IOHelper()
-        self.annotator = Annotator(self.iohelper)
-        self.iohelper.select_file('test.jpg')
+        self.annotator = Annotator(TestFiles.make_io_helper())
 
 
     def test_can_create(self):
@@ -22,16 +15,14 @@ class TestAnnotator(unittest.TestCase):
 
 
     def test_creates_prefixes_without_information(self):
-        self.assertEqual( \
-            self.annotator.save_as_turtle(as_string=True), \
-            TestAnnotator.PREFIXES)
+        self.assertEqual(self.annotator.save_as_turtle(as_string=True), \
+                         TestFiles.PREFIXES)
 
 
     def test_includes_added_organism_into_turtle(self):
-        self.annotator.add_bug(*TestAnnotator.BUG_BOUNDING_BOX)
+        self.annotator.add_bug(*TestFiles.BOUNDING_BOX)
         self.assertEqual(self.annotator.save_as_turtle(as_string=True), \
-            TestAnnotator.PREFIXES + \
-            Bug('img', TestAnnotator.BUG_BOUNDING_BOX).as_turtle())
+                         TestFiles.make_rdf_file())
 
 
 if __name__ == '__main__':
