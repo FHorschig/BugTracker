@@ -18,9 +18,27 @@ class TemplateMatching(object):
         res = cv2.matchTemplate(img_gray, template, eval(methods[1]))
 
         threshold = 0.4
-        loc = np.where( res >= threshold)
+        loc = np.where(res >= threshold)
 
-        for pt in zip(*loc[::-1]):
+        frame_groups = []
+        points = zip(*loc[::-1])
+
+        while points:
+            print len(points)
+            frame_group = [points.pop()]
+            frame_groups.append(frame_group)
+
+            for frame in frame_group:
+                for i in range(len(points)-1,-1,-1):
+                    if abs(points[i][0] - frame[0]) + abs(points[i][1] - frame[1]) <= 2:
+                        frame_group.append(points[i])
+                        del points[i]
+
+        frames = []
+        for frame_group in frame_groups:
+            frames.append(tuple(np.mean(frame_group, axis=0, dtype=np.int32)))
+
+        for pt in frames:
             annotator.add_bug(pt[0], pt[1], w, h)
             cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 1)
 
