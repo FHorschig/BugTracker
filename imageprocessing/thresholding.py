@@ -6,7 +6,8 @@ from annotations.bug import Bug
 
 class Thresholding(object):
 
-    def process(self, annotator, img):
+    def process(self, annotator, img_file):
+        img = cv2.imread(img_file)
         image = img.copy()
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

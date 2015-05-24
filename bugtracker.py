@@ -49,7 +49,7 @@ def configure_iohelper(args):
 
 
 def main(args):
-    """Function that get called on execution."""
+    """Function that gets called on execution."""
     if args.test:
         from bugtracker_test import execute_all_tests
         execute_all_tests()
@@ -66,6 +66,8 @@ def main(args):
     # analyzer.process(method=ip.TemplateMatchingWithThresholding())
 
     annotator.save_as_turtle()
+
+    analyzer.show_result()
 
     exit(0)
 
