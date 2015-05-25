@@ -18,7 +18,6 @@ class Analyzer(object):
     def process(self, method):
         """Extracts features and stores findings into given annotator."""
 
-        # image = cv2.imread(self.__iohelper.thumbnail())
         img_file = self.__iohelper.thumbnail()
         self.result = method.process(self.__annotator, img_file)
 

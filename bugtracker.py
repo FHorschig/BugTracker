@@ -59,8 +59,11 @@ def main(args):
     annotator = Annotator(iohelper)
 
     analyzer = ip.Analyzer(annotator, iohelper)
+        
     if args.dry_run:
         exit(0)
+
+    # analyzer.process(method=ip.QRDetection())
     # analyzer.process(method=ip.Thresholding())
     analyzer.process(method=ip.TemplateMatching())
     # analyzer.process(method=ip.TemplateMatchingWithThresholding())
