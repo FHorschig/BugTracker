@@ -5,22 +5,35 @@ from annotations.bug import Bug
 
 class Framegroup(object):
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, res):
         self.width = width
         self.height = height
         self.left, self.right, self.top, self.bottom = 0.0,0.0,0.0,0.0
         self.frames = []
+        self.values = res
+        self.show_frame = (0,0)
+        self.show_value = 0
 
     def add(self, frame):
         self.frames.append(frame)
-        self.left = (self.left*(len(self.frames)-1)+frame[0])/len(self.frames)
-        self.right = (self.right*(len(self.frames)-1)+frame[0]+self.width)/len(self.frames)
-        self.top = (self.top*(len(self.frames)-1)+frame[1])/len(self.frames)
-        self.bottom = (self.bottom*(len(self.frames)-1)+frame[1]+self.height)/len(self.frames)
+        if self.show_value < self.values[frame[1], frame[0]]:
+            self.show_frame = frame
+            self.show_value = self.values[frame[1], frame[0]]
+            self.left = frame[0]
+            self.right = frame[0]+self.width
+            self.top = frame[1]
+            self.bottom = frame[1]+self.height
 
     def is_member(self, frame):
-        middle = [frame[0]+self.width/2, frame[1]+self.height/2]
-        return middle[0]>self.left and middle[0]<self.right and middle[1]>self.top and middle[1]<self.bottom
+        dX = min(self.right, frame[0]+self.width) - max(self.left, frame[0])
+        if dX < 0:
+            return False
+
+        dY = min(self.bottom, frame[1]+self.height) - max(self.top, frame[1])
+        if dY < 0:
+            return False
+
+        return dX>self.width/4 and dY>self.height/4
 
 
 class TemplateMatching(object):
@@ -53,24 +66,22 @@ class TemplateMatching(object):
                     group_found = True
                     break
             if not group_found:
-                new_frame_group = Framegroup(w, h)
+                new_frame_group = Framegroup(w, h, res)
                 new_frame_group.add(p)
                 frame_groups.append(new_frame_group)
 
-        frames = []
+        for i in range(len(frame_groups)-1,-1,-1):
+            for j in range(i-1,-1,-1):
+                if frame_groups[j].is_member(frame_groups[i].show_frame):
+                    for frame in frame_groups[i].frames:
+                        frame_groups[j].add(frame)
+                    del(frame_groups[i])
+                    break
+
         for frame_group in frame_groups:
-            best_frame = [0,0]
-            best_value = 0
-            for frame in frame_group.frames:
-                if res[frame[1],frame[0]] > best_value:
-                    best_value = res[frame[1],frame[0]]
-                    best_frame = frame
-            frames.append(best_frame)
-
-
-        for pt in frames:
-            annotator.add_bug(pt[0], pt[1], w, h)
-            cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 1)
+            frame = frame_group.show_frame
+            annotator.add_bug(frame[0], frame[1], w, h)
+            cv2.rectangle(img_rgb, frame, (frame[0] + w, frame[1] + h), (0,0,255), 1)
 
         return img_rgb
 
