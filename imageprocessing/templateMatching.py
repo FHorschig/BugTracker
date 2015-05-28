@@ -4,6 +4,7 @@ from random import randint
 from annotations.bug import Bug
 
 class Framegroup(object):
+
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -32,10 +33,11 @@ class Framegroup(object):
 
 class TemplateMatching(object):
 
-    def process(self, annotator, img):
+    def process(self, annotator, img_file):
+        img = cv2.imread(img_file)
+
         methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
-
 
         img_rgb = img.copy()
         img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
@@ -98,7 +100,8 @@ class TemplateMatching(object):
 
 class TemplateMatchingWithThresholding(object):
 
-    def process(self, annotator, img):
+    def process(self, annotator, img_file):
+        img = cv2.imread(img_file)
         image = img.copy()
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
