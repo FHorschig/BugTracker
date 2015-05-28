@@ -17,14 +17,6 @@ class Framegroup(object):
         self.right = (self.right*(len(self.frames)-1)+frame[0]+self.width)/len(self.frames)
         self.top = (self.top*(len(self.frames)-1)+frame[1])/len(self.frames)
         self.bottom = (self.bottom*(len(self.frames)-1)+frame[1]+self.height)/len(self.frames)
-        #if frame[0]<self.left:
-        #    self.left = frame[0]
-        #if frame[0]+self.width>self.right:
-        #    self.right = frame[0]+self.width
-        #if frame[1]<self.top:
-        #    self.top = frame[1]
-        #if frame[1]+self.height>self.bottom:
-        #    self.bottom = frame[1]+self.height
 
     def is_member(self, frame):
         middle = [frame[0]+self.width/2, frame[1]+self.height/2]
@@ -52,21 +44,6 @@ class TemplateMatching(object):
 
         frame_groups = []
         points = zip(*loc[::-1])
-
-        #while points:
-        #    print len(points)
-        #    frame_group = [points.pop()]
-        #    frame_groups.append(frame_group)
-
-        #    for frame in frame_group:
-        #        for i in range(len(points)-1,-1,-1):
-        #            if abs(points[i][0] - frame[0]) + abs(points[i][1] - frame[1]) <= 2:
-        #                frame_group.append(points[i])
-        #                del points[i]
-
-        #frames = []
-        #for frame_group in frame_groups:
-        #    frames.append(tuple(np.mean(frame_group, axis=0, dtype=np.int32)))
         
         for p in points:
             group_found = False
@@ -113,8 +90,6 @@ class TemplateMatchingWithThresholding(object):
 
         methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
-
-
 
         template = cv2.imread('hesp_template.jpg', 0)
         template_gray_blur = cv2.GaussianBlur(template, (15, 15), 0)
