@@ -100,6 +100,7 @@ class IOHelper(object):
         rows = []
         for row in reader:
             rows.append(row)
+        for row in rows:
             if index > 0 and not self.__silent:
                 print "[" + str(index) + "] " + row[4]
             index += 1
