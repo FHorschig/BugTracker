@@ -12,6 +12,8 @@ class TestFiles(object):
     IMG = "http://gbif.naturkundemuseum-berlin.de/hackathon/Thumbs/" + IMG_NAME
     IMG_PATH = CACHE_DIR + IMG_NAME
 
+    TEMPLATE = CACHE_DIR + 'hesp_template.jpg'
+
     RDF_SINGLE_BUG = "\n<" + IMG + "#x=100&y=10&w=30&h=50> a dwc:Organism ."
     PREFIXES = "@prefix dwc: <http://rs.tdwg.org/dwc/terms/#> .\n" +\
                "@prefix img: <" + IMG + "> .\n"

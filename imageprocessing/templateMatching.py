@@ -38,15 +38,15 @@ class Framegroup(object):
 
 class TemplateMatching(object):
 
-    def process(self, annotator, img_file):
-        img = cv2.imread(img_file)
+    def process(self, annotator, io_helper):
+        img = cv2.imread(io_helper.thumbnail())
 
         methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
         img_rgb = img.copy()
         img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-        template = cv2.imread('hesp_template.jpg',0)
+        template = cv2.imread(io_helper.template(),0)
 
         w, h = template.shape[::-1]
 
@@ -57,7 +57,7 @@ class TemplateMatching(object):
 
         frame_groups = []
         points = zip(*loc[::-1])
-        
+
         for p in points:
             group_found = False
             for frame_group in frame_groups:

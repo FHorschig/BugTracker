@@ -17,7 +17,10 @@ class TestBugTracker(unittest.TestCase):
         with self.assertRaises(SystemExit):
             main(get_arg_parser().parse_args(
                 ["--dry_run",
-                 "-f " + TestFiles.IMG]))
+                 "-f" + TestFiles.IMG,
+                 "-t" + TestFiles.TEMPLATE,
+                 "-c" + TestFiles.CACHE_DIR,
+                 "-o" + TestFiles.OUT_DIR]))
 
 
 def execute_all_tests():

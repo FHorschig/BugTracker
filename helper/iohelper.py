@@ -16,6 +16,7 @@ class IOHelper(object):
         self.__dry = False
         self.__cache_dir = "."
         self.__output_dir = "."
+        self.__template = None
         self.__uri = None
         self.__thumb = None
 
@@ -35,6 +36,11 @@ class IOHelper(object):
         exit(0)
 
 
+    def select_template(self, template_uri):
+        """ Sets the path to a local or external template file."""
+        self.__template = template_uri
+
+
     def set_dry_run(self, dry):
         """ If in running dry, neither files nor pathes are created. """
         self.__dry = dry
@@ -48,6 +54,11 @@ class IOHelper(object):
     def image(self):
         """ Returns path for downloaded image of the selected file."""
         return self.__download_if_not_cached(self.__uri)
+
+
+    def template(self):
+        """ Returns path for local or downloaded template."""
+        return self.__download_if_not_cached(self.__template)
 
 
     def write_out(self, msg="", filename=None):
