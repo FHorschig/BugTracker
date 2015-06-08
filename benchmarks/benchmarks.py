@@ -6,3 +6,6 @@ def execute_all(method, template):
     """ Start a benchmark for the given method for every avaiable file. """
     benchmark = Benchmark(method(), template)
     benchmark.execute_all()
+    print "Recall: " + str(benchmark.recall())
+    print "Precision: " + str(benchmark.precision())
+    print "F-Measure: " + str(benchmark.fmeasure())

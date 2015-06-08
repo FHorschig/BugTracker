@@ -1,19 +1,23 @@
 """ A benchmark class that executes a benchmark for a given method."""
-from imageprocessing.analyzer import Analyzer
+# pylint: disable=F0401
+
+
 from annotations.annotator import Annotator
+from reference import Reference
 from helper.iohelper import IOHelper
+from imageprocessing.analyzer import Analyzer
 
 class Benchmark(object):
     """Method in, statistics out."""
 
     OUTPUT_DIR = 'benchmarks/out'
-    CACHE_DIR = 'benchmarks/cache'
     REFERENCES = 'benchmarks/references'
+
 
     def __init__(self, method, template):
         self.__method = method
         self.__iohelper = IOHelper()
-        self.__iohelper.set_cache_directory(Benchmark.CACHE_DIR)
+        self.__iohelper.set_cache_directory(Benchmark.REFERENCES)
         self.__iohelper.set_output_directory(Benchmark.OUTPUT_DIR)
         if template:
             self.__iohelper.select_template(template)
@@ -21,17 +25,20 @@ class Benchmark(object):
         self.__analyzer = Analyzer(self.__annotator, self.__iohelper)
         self.__precision = None
         self.__recall = None
+        self.__references = Reference.load_from_folder(Benchmark.REFERENCES)
 
 
     def execute_all(self):
         """ Executes the Method against all stored reference files."""
-        # TODO(fhorschig): Get actual reference files.
-        # TODO(fhorschig): Compute precision.
-        # TODO(fhorschig): Compute recall.
-        for input_file in []:
-            self.__iohelper.select_file(input_file)
+        recalls = 0
+        precs = 0
+        for reference in self.__references:
+            self.__iohelper.select_file(reference.imagefile())
             self.__analyzer.process(self.__method)
-            # self.__annotator has a lot of data now. Use it!
+            recalls = recalls + reference.recall_for(self.__annotator.bugs())
+            precs = precs + reference.precision_for(self.__annotator.bugs())
+        self.__recall = recalls / len(self.__references)
+        self.__precision = precs / len(self.__references)
 
 
     def recall(self):

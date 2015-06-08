@@ -75,7 +75,9 @@ def exit_on_benchmark_initiation(args, method=DEFAULT_METHOD):
     if not args.benchmark:
         return
     from benchmarks import benchmarks
-    benchmarks.execute_all(method, args.template)
+    # TODO(fhorschig|all): As soon as automatic extraction works, remove if... .
+    benchmarks.execute_all(method,
+                           args.template if args.template else DEFAULT_TEMPLATE)
     exit(0)
 
 
