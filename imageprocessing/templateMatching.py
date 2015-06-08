@@ -88,8 +88,8 @@ class TemplateMatching(object):
 
 class TemplateMatchingWithThresholding(object):
 
-    def process(self, annotator, img_file):
-        img = cv2.imread(img_file)
+    def process(self, annotator, iohelper):
+        img = cv2.imread(iohelper.thumbnail())
         image = img.copy()
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -102,7 +102,7 @@ class TemplateMatchingWithThresholding(object):
         methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
-        template = cv2.imread('hesp_template.jpg', 0)
+        template = cv2.imread(iohelper.template(), 0)
         template_gray_blur = cv2.GaussianBlur(template, (15, 15), 0)
         template_thresh = cv2.adaptiveThreshold(template_gray_blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 1)
 
