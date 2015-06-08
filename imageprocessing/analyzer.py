@@ -31,8 +31,8 @@ class Analyzer(object):
 
         if isinstance(self.result_image, numpy.ndarray):
             result_image = self.result_image
-
-            width, height = result_image.shape[:2]
+            
+            height, width = result_image.shape[:2]
             if width > max_output_width or height > max_output_height:
                 resize_factor = min(float(max_output_width) / width, float(max_output_height) / height)
                 result_image = cv2.resize(result_image, (0, 0), fx=resize_factor, fy=resize_factor)
