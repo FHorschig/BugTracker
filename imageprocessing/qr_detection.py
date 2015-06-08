@@ -22,11 +22,11 @@ class QRDetection(object):
 
     def process(self, annotator, io_helper):
         # wrap image data
-        result_image = cv2.imread(io_helper.image(), cv2.CV_LOAD_IMAGE_GRAYSCALE)
-        pil = Image.fromarray(result_image)
-        width, height = pil.size
+        image = cv2.imread(io_helper.image(), cv2.IMREAD_GRAYSCALE)
+        pil_image = Image.fromarray(image)
+        width, height = pil_image.size
 
-        zbar_image = zbar.Image(width, height, 'Y800', pil.tostring())
+        zbar_image = zbar.Image(width, height, 'Y800', pil_image.tostring())
 
         # create a reader and scan for barcodes
         scanner = zbar.ImageScanner()
@@ -38,6 +38,7 @@ class QRDetection(object):
         print 'QR detection done'
 
         # output image with qr codes marked
+        result_image = cv2.imread(io_helper.image())
         for symbol in zbar_image:
             cv2.rectangle(result_image, symbol.location[0], symbol.location[2], (0, 0, 255), 20)
         return result_image
