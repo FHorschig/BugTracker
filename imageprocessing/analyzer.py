@@ -25,6 +25,8 @@ class Analyzer(object):
         if self.result_image is None:
             return
 
+        self.__annotator.save_as_turtle()
+
         if isinstance(self.result_image, numpy.ndarray):
             result_image = self.result_image
 
@@ -35,4 +37,3 @@ class Analyzer(object):
 
             cv2.imshow('Image', result_image)
             cv2.waitKey()
-
