@@ -10,6 +10,11 @@ class Bug(object):
         self.__x, self.__y, self.__w, self.__h = bounding_box
 
 
+    def bounds(self):
+        """ Returns coordinates on image."""
+        return self.__x, self.__y, self.__w, self.__h
+
+
     def as_turtle(self):
         """Drawn a box around a bug? Tell me with this method"""
         return "\n<" + self.__image_url + \

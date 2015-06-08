@@ -25,12 +25,27 @@ class Reference(object):
 
     def recall_for(self, bugs):
         """ Were all relevant bugs found?"""
-        return 0.123  # TODO(fhorschig): Implement.
+        tpos, _, _, fneg = self.__positives_and_negatives(bugs)
+        return float(tpos) / (tpos + fneg)
 
 
     def precision_for(self, bugs):
         """ Which found bugs were relevant?"""
-        return 0.321  # TODO(fhorschig): Implement.
+        tpos, _, fpos, _ = self.__positives_and_negatives(bugs)
+        return float(tpos) / (tpos + fpos)
+
+
+    def __positives_and_negatives(self, bugs):
+        """ Which found bugs were relevant?"""
+        true_pos, true_neg, false_pos, false_neg = 0, 0, 0, 0
+        for bug in bugs:
+            if bug.bounds() in self.__bugs:
+                true_pos = true_pos + 1
+            else:
+                false_pos = false_pos + 1
+        false_neg = len(self.__bugs) - true_pos
+        true_neg = len(bugs) - false_pos
+        return true_pos, true_neg, false_pos, false_neg
 
 
     def reffile(self):
@@ -49,5 +64,5 @@ class Reference(object):
         with open(self.reffile(), 'rb') as reffile:
             reader = csv.reader(reffile, delimiter=';', quotechar='\n')
             for line in reader:
-                bugs.append(line)
+                bugs.append(tuple(map(int, line)))
         return bugs
