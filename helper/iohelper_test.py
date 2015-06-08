@@ -1,4 +1,4 @@
-#pylint: disable=missing-docstring, invalid-name, R0904
+#pylint: disable=missing-docstring, invalid-name, R0904, F0401
 
 import unittest
 from os import path

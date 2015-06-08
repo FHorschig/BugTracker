@@ -17,14 +17,14 @@ class Analyzer(object):
 
     def process(self, method):
         """Extracts features and stores findings into given annotator."""
-
-        img_file = self.__iohelper.thumbnail()
-        self.result = method.process(self.__annotator, img_file)
+        self.result = method.process(self.__annotator, self.__iohelper)
 
 
     def show_result(self):
         if self.result is None:
             return
+
+        self.__annotator.save_as_turtle()
 
         if isinstance(self.result, numpy.ndarray):
             cv2.imshow('Image', self.result)
