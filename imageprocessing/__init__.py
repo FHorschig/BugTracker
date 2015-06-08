@@ -7,5 +7,6 @@ from qr_detection import QRDetection
 METHODS = {
     "THRESHOLD": Thresholding,
     "TEMPLATE": TemplateMatching,
+    "QRCODE": QRDetection,
     "TEMPLATE_THRESHOLD": TemplateMatchingWithThresholding,
 }

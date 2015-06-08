@@ -88,6 +88,7 @@ def main(args):
     analyzer = ip.Analyzer(annotator, iohelper)
 
     analyzer.process(method())
+    analyzer.process(ip.METHODS["QRCODE"]())
 
     if args.dry_run:
         exit(0)
