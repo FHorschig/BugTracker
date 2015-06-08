@@ -87,14 +87,13 @@ def main(args):
 
     analyzer = ip.Analyzer(annotator, iohelper)
 
+    # analyzer.process(ip.METHODS["QRCODE"]())
     analyzer.process(method())
-    analyzer.process(ip.METHODS["QRCODE"]())
 
     if args.dry_run:
         exit(0)
 
     analyzer.show_result()
-    annotator.save_as_turtle()
     exit(0)
 
 
