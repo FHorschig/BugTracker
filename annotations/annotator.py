@@ -12,9 +12,21 @@ class Annotator(object):
         self.__iohelper = iohelper
         self.__bugs = []
 
-    def add_bug(self, x, y, w, h):
+
+    def bugs(self):
+        """ Returns the list of saved bugs. Needed esp. for Benchmarking."""
+        return self.__bugs
+
+
+    def reset_bugs(self):
+        """ Empties the list of known bugs."""
+        self.__bugs = []
+
+
+    def add_bug(self, x, y, width, height):
         """Drawn a box around a bug? Tel me with this method"""
-        self.__bugs.append(Bug('img', (x, y, w, h)))
+        self.__bugs.append(Bug('img', (x, y, width, height)))
+
 
     def save_as_turtle(self, as_string=False):
         """Saves the internal data as turtle file or prints it as String."""
@@ -29,6 +41,7 @@ class Annotator(object):
                "\n@prefix img: <" + self.__iohelper.uri() + "> ."+\
                "\n" +\
                "\n".join(self.__convert_bugs_to_turtle())
+
 
     def __convert_bugs_to_turtle(self):
         """Converts the bug objects into strings."""

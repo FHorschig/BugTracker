@@ -23,6 +23,8 @@ def get_arg_parser():
                         help='Avoids IO and downloads.')
     parser.add_argument('--test', action='store_true',
                         help='Execute all tests and exit')
+    parser.add_argument('-b', '--benchmark', action='store_true',
+                        help='Executes the benchmarks for the chosen method.')
     parser.add_argument('-c', '--cache_directory',
                         help='The directory where temporary files are stored.',
                         metavar='')
@@ -61,10 +63,22 @@ def configure_iohelper(args):
 
 def exit_on_test_initiation(args):
     """ Dispatches testing in case of present test flag."""
-    if args.test:
-        from bugtracker_test import execute_all_tests
-        execute_all_tests()
-        exit(0)
+    if not args.test:
+        return
+    from bugtracker_test import execute_all_tests
+    execute_all_tests()
+    exit(0)
+
+
+def exit_on_benchmark_initiation(args, method=DEFAULT_METHOD):
+    """ Dispatches testing in case of present test flag."""
+    if not args.benchmark:
+        return
+    from benchmarks import benchmarks
+    # TODO(fhorschig|all): As soon as automatic extraction works, remove if... .
+    benchmarks.execute_all(method,
+                           args.template if args.template else DEFAULT_TEMPLATE)
+    exit(0)
 
 
 def select_method(args):
@@ -82,6 +96,7 @@ def main(args):
     exit_on_test_initiation(args)
 
     method = select_method(args)
+    exit_on_benchmark_initiation(args, method)
     iohelper = configure_iohelper(args)
     annotator = Annotator(iohelper)
 
