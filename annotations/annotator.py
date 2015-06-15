@@ -18,9 +18,14 @@ class Annotator(object):
         return self.__bugs
 
 
-    def add_bug(self, x, y, w, h):
+    def reset_bugs(self):
+        """ Empties the list of known bugs."""
+        self.__bugs = []
+
+
+    def add_bug(self, x, y, width, height):
         """Drawn a box around a bug? Tel me with this method"""
-        self.__bugs.append(Bug('img', (x, y, w, h)))
+        self.__bugs.append(Bug('img', (x, y, width, height)))
 
 
     def save_as_turtle(self, as_string=False):

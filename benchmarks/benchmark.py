@@ -33,6 +33,7 @@ class Benchmark(object):
         recalls = 0
         precs = 0
         for reference in self.__references:
+            self.__annotator.reset_bugs()
             self.__iohelper.select_file(reference.imagefile())
             self.__analyzer.process(self.__method)
             reference.compare_with(self.__annotator.bugs())

@@ -10,6 +10,8 @@ from annotations.bug import Bug
 class Reference(object):
     """ Holds data like count of bugs and checks if a bug is well encircled."""
 
+    TOLERANCE = 0.3  # Bounding boxes can be 30% bigger or smaller
+
     def __init__(self, folder, sample_name):
         self.__name = sample_name.strip('.ref')
         self.__folder = folder
@@ -32,7 +34,7 @@ class Reference(object):
     def show_image(self):
         """ Were all relevant bugs found?"""
         img = cv2.imread(self.imagefile()).copy()
-        Reference.__draw_bugs(img, self.__bugs, False, 1)
+        Reference.__draw_bugs(img, self.__true_positives, False, 1)
         Reference.__draw_bugs(img, self.__false_negatives, (0, 255, 0))
         Reference.__draw_bugs(img, self.__false_positives, (0, 0, 255))
         cv2.imshow('Image', img)
@@ -106,7 +108,7 @@ class Reference(object):
     @staticmethod
     def __is_similar(rect, another):
         """ Returns true if the rects are of similar size and position. """
-        x_tolerance = 0.1 * max(rect[2], another[2])
-        y_tolerance = 0.1 * max(rect[3], another[3])
+        x_tolerance = Reference.TOLERANCE * max(rect[2], another[2])
+        y_tolerance = Reference.TOLERANCE * max(rect[3], another[3])
         return  abs(rect[0] - another[0]) < x_tolerance and \
                 abs(rect[1] - another[1]) < y_tolerance
