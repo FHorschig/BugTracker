@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from random import randint
 from annotations.bug import Bug
+from imageprocessing.thresholding import Thresholding
 
 class Framegroup(object):
 
@@ -33,7 +34,7 @@ class Framegroup(object):
         if dY < 0:
             return False
 
-        return dX>self.width/4 and dY>self.height/4
+        return dX>self.width/3 and dY>self.height/3
 
 
 class TemplateMatching(object):
@@ -46,7 +47,12 @@ class TemplateMatching(object):
 
         img_rgb = img.copy()
         img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-        template = cv2.imread(io_helper.template(),0)
+        # template = cv2.imread(io_helper.template(),0)
+        thresh = Thresholding()
+        template_rgb = thresh.extractTemplate(img)
+        template = cv2.cvtColor(template_rgb, cv2.COLOR_BGR2GRAY)
+        # cv2.imshow('Image', template_rgb)
+        # cv2.waitKey()
 
         w, h = template.shape[::-1]
 
