@@ -28,15 +28,18 @@ class Benchmark(object):
         self.__references = Reference.load_from_folder(Benchmark.REFERENCES)
 
 
-    def execute_all(self):
+    def execute_all(self, show_images=False):
         """ Executes the Method against all stored reference files."""
         recalls = 0
         precs = 0
         for reference in self.__references:
             self.__iohelper.select_file(reference.imagefile())
             self.__analyzer.process(self.__method)
-            recalls = recalls + reference.recall_for(self.__annotator.bugs())
-            precs = precs + reference.precision_for(self.__annotator.bugs())
+            reference.compare_with(self.__annotator.bugs())
+            recalls = recalls + reference.recall()
+            precs = precs + reference.precision()
+            if show_images:
+                reference.show_image()
         self.__recall = recalls / len(self.__references)
         self.__precision = precs / len(self.__references)
 
