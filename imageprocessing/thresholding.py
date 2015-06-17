@@ -90,8 +90,8 @@ class Thresholding(object):
 
             value = cv2.matchTemplate(resized_roi, resized_template, cv2.TM_CCOEFF_NORMED)
 
-            if value < 0.5:
-                result.append(roi)
+            if value < 0.2:
+                result.append(cnt)
 
         return result
 
@@ -184,7 +184,9 @@ class Thresholding(object):
         contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 50]
 
         # self.showContourRects(image, contours)
-        # contours = self.removeLabelContours(contours, image)
+
+        contours = self.removeLabelContours(contours, image)
+        
         # self.showContourRects(image, contours)
 
 
