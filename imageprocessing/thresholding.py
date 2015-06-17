@@ -96,14 +96,18 @@ class Thresholding(object):
         img = image.copy()
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area < 10:
+            if area < 5 or len(cnt) < 5:
                 continue
-            ellipse = cv2.fitEllipse(cnt)
-            center, axes, angle = ellipse
-            rect_area = axes[0] * axes[1]
-            rect = np.round(np.float64(cv2.cv.BoxPoints(ellipse))).astype(np.int64)
+            # ellipse = cv2.fitEllipse(cnt)
+            # center, axes, angle = ellipse
+            # rect_area = axes[0] * axes[1]
+            # rect = np.round(np.float64(cv2.cv.BoxPoints(ellipse))).astype(np.int64)
             color = (255,0,0)
-            cv2.drawContours(img, [rect], 0, color, 2)
+
+            x,y,w,h = cv2.boundingRect(cnt)
+
+            cv2.rectangle(img, (x, y), (x+w, y+h), color, 2)
+            # cv2.drawContours(img, [rect], 0, color, 2)
         cv2.imshow('Image', img)
         cv2.waitKey()
 
@@ -113,7 +117,7 @@ class Thresholding(object):
         i = 0
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area < 10 or area > 10000:
+            if area < 5 or len(cnt) < 5:
                 continue
             ellipse = cv2.fitEllipse(cnt)
             center, axes, angle = ellipse
@@ -146,24 +150,38 @@ class Thresholding(object):
                     cont_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 
+        # cv2.imshow('Image', thresh)
+        # cv2.waitKey()
+        # cv2.imshow('Image', closing)
+        # cv2.waitKey()
+        # cv2.imshow('Image', cont_img)
+        # cv2.waitKey()
         # self.showContourBubbles(image, contours)
+        self.showContourRects(image, contours)
 
-        tenpercent = len(contours)/20
-        contours.sort(key=lambda x: max([p[0][0] for p in x])-min([p[0][0] for p in x]))
-        contours = contours[tenpercent:-tenpercent]
-        contours.sort(key=lambda x: max([p[0][1] for p in x])-min([p[0][1] for p in x]))
-        contours = contours[tenpercent:-tenpercent]
-        
-
-        # self.showContourRects(image, contours)
 
         contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 50]
 
-        # self.showContourRects(image, contours)
+        self.showContourRects(image, contours)
+
+
+        tenpercent = len(contours)/20
+
+        contours.sort(key=lambda x: max([p[0][0] for p in x])-min([p[0][0] for p in x]))
+        contours = contours[tenpercent:len(contours)-tenpercent]
+
+        self.showContourRects(image, contours)
+
+        contours.sort(key=lambda x: max([p[0][1] for p in x])-min([p[0][1] for p in x]))
+        contours = contours[tenpercent:len(contours)-tenpercent]
+
+
+
+        self.showContourRects(image, contours)
 
         contours = self.removeExtremes(contours, 5, 2)
 
-        # self.showContourRects(image, contours)
+        self.showContourRects(image, contours)
 
 
         templates = []
@@ -194,7 +212,7 @@ class Thresholding(object):
                 match_values[j] += res[0][0]
 
         best_template_index = match_values.index(max(match_values))
-        # cv2.imshow('Image', templates[best_template_index])
-        # cv2.waitKey()
+        cv2.imshow('Image', templates[best_template_index])
+        cv2.waitKey()
 
         return templates[best_template_index]
