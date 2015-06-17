@@ -117,7 +117,7 @@ class Thresholding(object):
         img = image.copy()
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area < 5 or len(cnt) < 5:
+            if area < 5:
                 continue
             # ellipse = cv2.fitEllipse(cnt)
             # center, axes, angle = ellipse
@@ -138,12 +138,8 @@ class Thresholding(object):
         i = 0
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area < 5 or len(cnt) < 5:
+            if area < 5:
                 continue
-            ellipse = cv2.fitEllipse(cnt)
-            center, axes, angle = ellipse
-            rect_area = axes[0] * axes[1]
-            rect = np.round(np.float64(cv2.cv.BoxPoints(ellipse))).astype(np.int64)
             for point in cnt:
                 cv2.circle(img, tuple(point[0]), 2, (255-i,(120+i)%255,i))
             color = (255,0,0)
@@ -186,7 +182,7 @@ class Thresholding(object):
         # self.showContourRects(image, contours)
 
         contours = self.removeLabelContours(contours, image)
-        
+
         # self.showContourRects(image, contours)
 
 
