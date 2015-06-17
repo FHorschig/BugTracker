@@ -157,12 +157,12 @@ class Thresholding(object):
         # cv2.imshow('Image', cont_img)
         # cv2.waitKey()
         # self.showContourBubbles(image, contours)
-        self.showContourRects(image, contours)
+        # self.showContourRects(image, contours)
 
 
         contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 50]
 
-        self.showContourRects(image, contours)
+        # self.showContourRects(image, contours)
 
 
         tenpercent = len(contours)/20
@@ -170,18 +170,18 @@ class Thresholding(object):
         contours.sort(key=lambda x: max([p[0][0] for p in x])-min([p[0][0] for p in x]))
         contours = contours[tenpercent:len(contours)-tenpercent]
 
-        self.showContourRects(image, contours)
+        # self.showContourRects(image, contours)
 
         contours.sort(key=lambda x: max([p[0][1] for p in x])-min([p[0][1] for p in x]))
         contours = contours[tenpercent:len(contours)-tenpercent]
 
 
 
-        self.showContourRects(image, contours)
+        # self.showContourRects(image, contours)
 
         contours = self.removeExtremes(contours, 5, 2)
 
-        self.showContourRects(image, contours)
+        # self.showContourRects(image, contours)
 
 
         templates = []
@@ -212,7 +212,7 @@ class Thresholding(object):
                 match_values[j] += res[0][0]
 
         best_template_index = match_values.index(max(match_values))
-        cv2.imshow('Image', templates[best_template_index])
-        cv2.waitKey()
+        # cv2.imshow('Image', templates[best_template_index])
+        # cv2.waitKey()
 
         return templates[best_template_index]
