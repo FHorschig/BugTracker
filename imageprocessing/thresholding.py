@@ -73,6 +73,27 @@ class Thresholding(object):
         # cv2.waitKey()
         return image
 
+    def removeLabelContours(self, contours, image):
+        result = []
+        blue_label_template = cv2.imread("templates/blue_label_template.jpg")
+        template_h, template_w = blue_label_template.shape[:2]
+
+        for cnt in contours:
+            x,y,w,h = cv2.boundingRect(cnt)
+            roi = image[y:y+h , x:x+w]
+            roi_h, roi_w = roi.shape[:2]
+
+            new_size = (max(roi_w, template_w), max(roi_h, template_h))
+
+            resized_roi = cv2.resize(roi, new_size)
+            resized_template = cv2.resize(blue_label_template, new_size)
+
+            value = cv2.matchTemplate(resized_roi, resized_template, cv2.TM_CCOEFF_NORMED)
+
+            if value < 0.5:
+                result.append(roi)
+
+        return result
 
     def removeExtremes(self, contours, iterations, dev):
         ret = contours
@@ -162,6 +183,8 @@ class Thresholding(object):
 
         contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 50]
 
+        # self.showContourRects(image, contours)
+        # contours = self.removeLabelContours(contours, image)
         # self.showContourRects(image, contours)
 
 
