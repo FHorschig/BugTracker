@@ -24,8 +24,13 @@ class Annotator(object):
 
 
     def add_bug(self, x, y, width, height):
-        """Drawn a box around a bug? Tel me with this method"""
-        self.__bugs.append(Bug('img', (x, y, width, height)))
+        """Drawn a box around a bug? Tell me with this method"""
+        bug = Bug('img', (x, y, width, height))
+        self.__add_taxon_information(bug)
+        self.__bugs.append(bug)
+
+    def __add_taxon_information(self, bug):
+        pass
 
 
     def save_as_turtle(self, as_string=False):

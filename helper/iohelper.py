@@ -3,12 +3,18 @@
 import csv
 import os
 import urllib2
+import zipfile
 
 class IOHelper(object):
     """Provides methods to access filenames, URIs and shared directories."""
 
     __IMAGE_LIST = "http://gbif.naturkundemuseum-berlin.de/"\
                    "hackathon/hackathon_list.csv"
+
+    __SPECIES_ZIP = "http://gbif.naturkundemuseum-berlin.de/"\
+                   "HPI/Arten_in_Kaesten.zip"
+    __SPECIES_LIST = "http://gbif.naturkundemuseum-berlin.de/"\
+                   "HPI/Arten_in_Kaesten.csv"
 
 
     def __init__(self, silent=False):
@@ -19,6 +25,19 @@ class IOHelper(object):
         self.__template = None
         self.__uri = None
         self.__thumb = None
+
+    def species_csv(self):
+        """ Returns path for downloaded and unzipped species csv."""
+        
+        species_list_path = self.__local_filename(IOHelper.__SPECIES_LIST)
+        if os.path.exists(species_list_path):
+            return species_list_path
+
+        zip_file = self.__download_if_not_cached(IOHelper.__SPECIES_ZIP)
+        with zipfile.ZipFile(zip_file) as zf:
+            zf.extract(os.path.basename(species_list_path), os.path.dirname(species_list_path))
+
+        return species_list_path
 
 
     def select_file(self, external_file=None, input_func=raw_input):
@@ -134,7 +153,7 @@ class IOHelper(object):
         return True
 
 
-    def __local_filename(self, url, is_thumb):
+    def __local_filename(self, url, is_thumb=False):
         """ Returns the filename of the given url within the cache."""
         filename = os.path.basename(url)
         if is_thumb:
@@ -176,7 +195,7 @@ class IOHelper(object):
             dl_size += len(buf)
             dl_f.write(buf)
             status = r"%10d  [%3.2f%%]" % (dl_size, dl_size * 100. / file_size)
-            status = status + chr(8)*(len(status)+1)
+            status = status + chr(8) * (len(status) + 1)
             print status,
 
         dl_f.close()

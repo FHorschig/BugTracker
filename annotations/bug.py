@@ -17,8 +17,13 @@ class Bug(object):
 
     def as_turtle(self):
         """Drawn a box around a bug? Tell me with this method"""
-        return "\n<" + self.__image_url + \
-                   "#x=" + str(self.__x) +\
-                   "&y=" + str(self.__y) +\
-                   "&w=" + str(self.__w) +\
-                   "&h=" + str(self.__h) + ">" + " a dwc:Organism ."
+        results = []
+        results.append("\n<{0}#x={1}&y={2}&w={3}&h={4}>"\
+          .format(self.__image_url, self.__x, self.__y, self.__w, self.__h))
+        results.append("a dwc:Organism ;")
+        results.append("dwc:order x ;")
+        results.append("dwc:family x ;")
+        results.append("dwc:genus x ;")
+        results.append("dwc:specificEpithet x ;")
+        results.append("dwc:taxonRank species .")
+        return "\n    ".join(results)
