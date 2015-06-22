@@ -20,7 +20,7 @@ class Bug(object):
         return self.__x, self.__y, self.__w, self.__h
 
 
-    def set_taxonomic_classification(self, family, order, genus, species):
+    def set_taxonomic_classification(self, order, family, genus, species):
         self.order = order
         self.family = family
         self.genus = genus
@@ -32,10 +32,15 @@ class Bug(object):
         results = []
         results.append("\n<{0}#x={1}&y={2}&w={3}&h={4}>"\
           .format(self.__image_url, self.__x, self.__y, self.__w, self.__h))
-        results.append("a dwc:Organism ;")
-        results.append("dwc:order {0} ;".format(self.order))
-        results.append("dwc:family {0} ;".format(self.family))
-        results.append("dwc:genus {0} ;".format(self.genus))
-        results.append("dwc:specificEpithet {0} ;".format(self.species))
-        results.append("dwc:taxonRank species .")
-        return "\n    ".join(results)
+        results.append("\n    a dwc:Organism")
+
+        if self.order:
+            results.append(";\n    dwc:order {0}".format(self.order))
+        if self.family:
+            results.append(";\n    dwc:family {0}".format(self.family))
+        if self.genus:
+            results.append(";\n    dwc:genus {0}".format(self.genus))
+        if self.species:
+            results.append(";\n    dwc:specificEpithet {0}".format(self.species))
+        results.append(".")
+        return "".join(results)

@@ -19,12 +19,13 @@ class Annotator(object):
 
     def add_qr_code(self, symbol):
         code = QRCode(symbol.data, symbol.location)
-        taxonomic_information = self.__get_taxonomic_information(symbol.data)
 
+        taxonomic_information = self.__get_qr_code_data(code.get_species_id())
         if taxonomic_information:
-            order = taxonomic_information[0][1:-1]
+            order = taxonomic_information[0]
             family = taxonomic_information[1]
-            genus, species = taxonomic_information[2].split()
+            species = taxonomic_information[2]
+            genus = species[:species.find(' ')] # genus is the first part of a species name
             code.set_taxonomic_classification(order, family, genus, species)
 
         self.__qr_codes.append(code)
@@ -43,26 +44,28 @@ class Annotator(object):
     def add_bug(self, x, y, width, height):
         """Drawn a box around a bug? Tell me with this method"""
         bug = Bug('img', (x, y, width, height))
-        if self.__qr_codes:
-            self.__add_taxon_information(bug)
+        self.__add_taxon_information(bug)
         self.__bugs.append(bug)
 
 
-    def __get_taxonomic_information(self, uri):
+    def __get_qr_code_data(self, species_id):
         with open(self.__iohelper.species_csv(), 'rb') as csvfile:
-            reader = csv.reader(csvfile, delimiter=';', quotechar='\n')
+            reader = csv.reader(csvfile, delimiter=';', quotechar='\"')
             for row in reader:
-                if uri.find(row[3][1:-1]) >= 0:
+
+                # row[3] contains the id of a species
+                if row[3] == species_id:
                     return row
-                    
+
 
     def __add_taxon_information(self, bug):
         qr_codes = self.__qr_codes
         
-        # TODO: find best matching qr code
+        # TODO: find best matching qr code once we have relative coordinates
 
-        code = qr_codes[0]
-        bug.set_taxonomic_classification(code.order, code.family, code.genus, code.species)
+        if qr_codes:
+            code = qr_codes[0]
+            bug.set_taxonomic_classification(code.order, code.family, code.genus, code.species)
 
 
     def save_as_turtle(self, as_string=False):
