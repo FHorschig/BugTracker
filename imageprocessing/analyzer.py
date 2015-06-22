@@ -11,10 +11,11 @@ class Analyzer(object):
     """Provides methods to extract regions with bugs from images."""
 
     def __init__(self, annotator, iohelper):
-        self.result_image = None
-
         self.__annotator = annotator
         self.__iohelper = iohelper
+
+        self.result_image = None
+        self.qr_codes = []
 
 
     def process(self, method):
@@ -36,6 +37,8 @@ class Analyzer(object):
             if width > max_output_width or height > max_output_height:
                 resize_factor = min(float(max_output_width) / width, float(max_output_height) / height)
                 result_image = cv2.resize(result_image, (0, 0), fx=resize_factor, fy=resize_factor)
+
+            print 'Displaying result image'
 
             cv2.imshow('Image', result_image)
             cv2.waitKey()

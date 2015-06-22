@@ -26,19 +26,6 @@ class IOHelper(object):
         self.__uri = None
         self.__thumb = None
 
-    def species_csv(self):
-        """ Returns path for downloaded and unzipped species csv."""
-        
-        species_list_path = self.__local_filename(IOHelper.__SPECIES_LIST)
-        if os.path.exists(species_list_path):
-            return species_list_path
-
-        zip_file = self.__download_if_not_cached(IOHelper.__SPECIES_ZIP)
-        with zipfile.ZipFile(zip_file) as zf:
-            zf.extract(os.path.basename(species_list_path), os.path.dirname(species_list_path))
-
-        return species_list_path
-
 
     def select_file(self, external_file=None, input_func=raw_input):
         """ Loads the image list if none is passed and lets the user choose."""
@@ -115,6 +102,19 @@ class IOHelper(object):
     def uri(self):
         """The stable URI for the currently processed image."""
         return self.__uri
+
+    def species_csv(self):
+        """ Returns path for downloaded and unzipped species csv."""
+        
+        species_list_path = self.__local_filename(IOHelper.__SPECIES_LIST)
+        if os.path.exists(species_list_path):
+            return species_list_path
+
+        zip_file = self.__download_if_not_cached(IOHelper.__SPECIES_ZIP)
+        with zipfile.ZipFile(zip_file) as zf:
+            zf.extract(os.path.basename(species_list_path), os.path.dirname(species_list_path))
+
+        return species_list_path
 
 
     def __enforce_directories(self, directory):
