@@ -25,6 +25,8 @@ def get_arg_parser():
                         help='Execute all tests and exit')
     parser.add_argument('-b', '--benchmark', action='store_true',
                         help='Executes the benchmarks for the chosen method.')
+    parser.add_argument('-s', '--show_intermediates', action='store_true',
+                        help='Shows pictures of benchmarks and debug images.')
     parser.add_argument('-c', '--cache_directory',
                         help='The directory where temporary files are stored.',
                         metavar='')
@@ -75,9 +77,7 @@ def exit_on_benchmark_initiation(args, method=DEFAULT_METHOD):
     if not args.benchmark:
         return
     from benchmarks import benchmarks
-    # TODO(fhorschig|all): As soon as automatic extraction works, remove if... .
-    benchmarks.execute_all(method,
-                           args.template if args.template else DEFAULT_TEMPLATE)
+    benchmarks.execute_all(method, args.template, args.show_intermediates)
     exit(0)
 
 

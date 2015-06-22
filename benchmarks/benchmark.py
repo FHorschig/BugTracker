@@ -41,6 +41,10 @@ class Benchmark(object):
             precs = precs + reference.precision()
             if show_images:
                 reference.show_image()
+            else:
+                reference.store_image()
+        if not show_images:
+            print "Difference images were saved to "+ Reference.DIFF_OUT
         self.__recall = recalls / len(self.__references)
         self.__precision = precs / len(self.__references)
 
