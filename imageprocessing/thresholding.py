@@ -75,7 +75,7 @@ class Thresholding(object):
 
     def removeLabelContours(self, contours, image):
         result = []
-        blue_label_template = cv2.imread("templates/blue_label_template.jpg")
+        blue_label_template = cv2.imread("templates/negatives/blue_label_template.jpg")
         template_h, template_w = blue_label_template.shape[:2]
 
         for cnt in contours:
