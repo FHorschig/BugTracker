@@ -13,8 +13,6 @@ class Thresholding(object):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gray_blur = cv2.GaussianBlur(gray, (9, 9), 0)
         thresh = cv2.adaptiveThreshold(gray_blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 31, 11)
-        #thresh = cv2.adaptiveThreshold(thresh1, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 31, 11)
-        #retval, thresh = cv2.threshold(gray_blur, 150, 255, cv2.THRESH_BINARY_INV)
 
         kernel = np.ones((3, 3), np.uint8)
         closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel, iterations=2)
@@ -166,6 +164,20 @@ class Thresholding(object):
             _, contours, _ = cv2.findContours(\
                     cont_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+        ## cut edges away if only found one contour around the box
+        cont_img = closing.copy()
+        while len(contours) <= 2:
+            height, width = cont_img.shape[:2]
+            newHeight = height - height/20
+            newWidth = width - width/20
+            cont_img = cont_img[0:newHeight, 0:newWidth]
+            copy = cont_img.copy()
+            if int(cv2.__version__[0]) < 3:
+                contours, _ = cv2.findContours(\
+                        copy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            else:
+                _, contours, _ = cv2.findContours(\
+                        copy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # cv2.imshow('Image', thresh)
         # cv2.waitKey()
