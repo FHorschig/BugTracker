@@ -40,9 +40,9 @@ class Framegroup(object):
 class TemplateMatching(object):
 
     def __init__(self):
-        self.multiscale = False
-        self.multiscalefactors = [0.5, 0.9, 1.0, 1.2, 1.5]
-        # self.multiscalefactors = [1.0]
+        # self.multiscalefactors = [0.5, 0.9, 1.0, 1.2, 1.5]
+        # self.multiscalefactors = [0.7, 1.0, 1.3]
+        self.multiscalefactors = [1.0]
 
     def process(self, annotator, io_helper):
         img = cv2.imread(io_helper.thumbnail())

@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 from annotations.bug import Bug
 
 
@@ -229,9 +230,23 @@ class Thresholding(object):
             max_height = max(max_height, height)
             max_width = max(max_width, width)
 
+
+        negativeSamples = [cv2.imread('templates/negatives/' + image) for image in os.listdir('templates/negatives')]
+        positiveSamples = [cv2.imread('templates/positives/' + image) for image in os.listdir('templates/positives')]
+
+        # templates.extend(positiveSamples)
+
         resized_templates = []
         for tmp in templates:
             resized_templates.append(cv2.resize(tmp, (max_width, max_height)))
+
+        resized_positives = []
+        for tmp in positiveSamples:
+            resized_positives.append(cv2.resize(tmp, (max_width, max_height)))
+
+        resized_negatives = []
+        for tmp in negativeSamples:
+            resized_negatives.append(cv2.resize(tmp, (max_width, max_height)))
 
         match_values = [0] * len(resized_templates)
         for i in range(len(resized_templates)):
@@ -243,6 +258,25 @@ class Thresholding(object):
 
                 match_values[i] += res[0][0]
                 match_values[j] += res[0][0]
+        
+        for i in range(len(resized_templates)):
+            for j in range(len(resized_positives)):
+                im1 = resized_templates[i]
+                im2 = resized_positives[j]
+
+                res = cv2.matchTemplate(im1, im2, cv2.TM_CCOEFF_NORMED)
+
+                match_values[i] += res[0][0]
+
+        for i in range(len(resized_templates)):
+            for j in range(len(resized_negatives)):
+                im1 = resized_templates[i]
+                im2 = resized_negatives[j]
+
+                res = cv2.matchTemplate(im1, im2, cv2.TM_CCOEFF_NORMED)
+
+                match_values[i] -= res[0][0]
+            
 
         best_template_index = match_values.index(max(match_values))
         # cv2.imshow('Image', templates[best_template_index])
