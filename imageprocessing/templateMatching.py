@@ -1,43 +1,48 @@
 import cv2
 import numpy as np
+
 from random import randint
+
 from annotations.bug import Bug
 from imageprocessing.thresholding import Thresholding
 
+
 class Framegroup(object):
 
-    def __init__(self, width, height, res):
-        self.width = width
-        self.height = height
-        self.left, self.right, self.top, self.bottom = 0.0,0.0,0.0,0.0
-        self.frames = []
-        self.values = res
-        self.show_frame = (0,0)
+    def __init__(self):
+        self.left, self.right, self.top, self.bottom, self.width, self.height = 0.0,0.0,0.0,0.0,0.0,0.0
+        self.show_point = (0,0)
         self.show_value = 0
 
-    def add(self, frame):
-        self.frames.append(frame)
-        if self.show_value < self.values[frame[1], frame[0]]:
-            self.show_frame = frame
-            self.show_value = self.values[frame[1], frame[0]]
-            self.left = frame[0]
-            self.right = frame[0]+self.width
-            self.top = frame[1]
-            self.bottom = frame[1]+self.height
+    def add(self, point, width, height, value):
+        if self.show_value < value:
+            self.show_point = (point)
+            self.show_value = value
+            self.left = point[0]
+            self.right = point[0]+width
+            self.top = point[1]
+            self.bottom = point[1]+height
+            self.width = width
+            self.height = height
 
-    def is_member(self, frame):
-        dX = min(self.right, frame[0]+self.width) - max(self.left, frame[0])
-        if dX < 0:
+    def is_member(self, point, width, height):
+        intersectionWidth = min(self.right, point[0]+width) - max(self.left, point[0])
+        if intersectionWidth < 0:
             return False
 
-        dY = min(self.bottom, frame[1]+self.height) - max(self.top, frame[1])
-        if dY < 0:
+        intersectionHeight = min(self.bottom, point[1]+height) - max(self.top, point[1])
+        if intersectionHeight < 0:
             return False
 
-        return dX>self.width/3 and dY>self.height/3
+        return (intersectionWidth>width/3 or intersectionWidth>self.width/3) and (intersectionHeight>height/3 or intersectionHeight>self.height/3)
 
 
 class TemplateMatching(object):
+
+    def __init__(self):
+        self.multiscale = False
+        self.multiscalefactors = [0.5, 1.0, 1.5, 3.0]
+        # self.multiscalefactors = [1.0]
 
     def process(self, annotator, io_helper):
         img = cv2.imread(io_helper.thumbnail())
@@ -45,51 +50,57 @@ class TemplateMatching(object):
         methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
-        img_rgb = img.copy()
-        img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+        img_bgr = img.copy()
+        img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
         # template = cv2.imread(io_helper.template(),0)
         thresh = Thresholding()
-        template_rgb = thresh.extractTemplate(img)
-        template = cv2.cvtColor(template_rgb, cv2.COLOR_BGR2GRAY)
-        # cv2.imshow('Image', template_rgb)
+        template_bgr = thresh.extractTemplate(img)
+        template_gray = cv2.cvtColor(template_bgr, cv2.COLOR_BGR2GRAY)
+        # cv2.imshow('Image', template_bgr)
         # cv2.waitKey()
 
-        w, h = template.shape[::-1]
-
-        res = cv2.matchTemplate(img_gray, template, eval(methods[1]))
-
-        threshold = 0.4
-        loc = np.where(res >= threshold)
-
+        w, h = template_gray.shape[::-1]
+        
         frame_groups = []
-        points = zip(*loc[::-1])
+        for factor in self.multiscalefactors:
+            scaledW = int(w * factor)
+            scaledH = int(h * factor)
 
-        for p in points:
-            group_found = False
-            for frame_group in frame_groups:
-                if frame_group.is_member(p):
-                    frame_group.add(p)
-                    group_found = True
-                    break
-            if not group_found:
-                new_frame_group = Framegroup(w, h, res)
-                new_frame_group.add(p)
-                frame_groups.append(new_frame_group)
+            scaledTemplate = cv2.resize(template_gray, (scaledW, scaledH))
 
-        for i in range(len(frame_groups)-1,-1,-1):
-            for j in range(i-1,-1,-1):
-                if frame_groups[j].is_member(frame_groups[i].show_frame):
-                    for frame in frame_groups[i].frames:
-                        frame_groups[j].add(frame)
-                    del(frame_groups[i])
-                    break
+            res = cv2.matchTemplate(img_gray, scaledTemplate, eval(methods[1]))
+
+            threshold = 0.41
+            loc = np.where(res >= threshold)
+
+            points = zip(*loc[::-1])
+
+            for p in points:
+                group_found = False
+                for frame_group in frame_groups:
+                    if frame_group.is_member(p, scaledW, scaledH):
+                        frame_group.add(p, scaledW, scaledH, res[p[1], p[0]])
+                        group_found = True
+                        break
+                if not group_found:
+                    new_frame_group = Framegroup()
+                    new_frame_group.add(p, scaledW, scaledH, res[p[1], p[0]])
+                    frame_groups.append(new_frame_group)
+
+        # for i in range(len(frame_groups)-1,-1,-1):
+        #     for j in range(i-1,-1,-1):
+        #         if frame_groups[j].is_member(frame_groups[i].show_frame):
+        #             for frame in frame_groups[i].frames:
+        #                 frame_groups[j].add(frame)
+        #             del(frame_groups[i])
+        #             break
 
         for frame_group in frame_groups:
-            frame = frame_group.show_frame
-            annotator.add_bug(frame[0], frame[1], w, h)
-            cv2.rectangle(img_rgb, frame, (frame[0] + w, frame[1] + h), (0,0,255), 1)
+            point = frame_group.show_point
+            annotator.add_bug(point[0], point[1], frame_group.width, frame_group.height)
+            cv2.rectangle(img_bgr, point, (point[0] + frame_group.width, point[1] + frame_group.height), (0,0,255), 1)
 
-        return img_rgb
+        return img_bgr
 
 
 class TemplateMatchingWithThresholding(object):
