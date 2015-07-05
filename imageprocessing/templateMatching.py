@@ -15,7 +15,7 @@ class Framegroup(object):
         self.show_value = 0
 
     def add(self, point, width, height, value):
-        if self.show_value < value:
+        if self.show_value < value*0.8:
             self.show_point = (point)
             self.show_value = value
             self.left = point[0]
@@ -34,14 +34,14 @@ class Framegroup(object):
         if intersectionHeight < 0:
             return False
 
-        return (intersectionWidth>width/3 or intersectionWidth>self.width/3) and (intersectionHeight>height/3 or intersectionHeight>self.height/3)
+        return (intersectionWidth>width/2 or intersectionWidth>self.width/2) and (intersectionHeight>height/2 or intersectionHeight>self.height/2)
 
 
 class TemplateMatching(object):
 
     def __init__(self):
         self.multiscale = False
-        self.multiscalefactors = [0.5, 1.0, 1.5, 3.0]
+        self.multiscalefactors = [0.5, 0.9, 1.0, 1.2, 1.5]
         # self.multiscalefactors = [1.0]
 
     def process(self, annotator, io_helper):
@@ -77,23 +77,18 @@ class TemplateMatching(object):
 
             for p in points:
                 group_found = False
-                for frame_group in frame_groups:
-                    if frame_group.is_member(p, scaledW, scaledH):
-                        frame_group.add(p, scaledW, scaledH, res[p[1], p[0]])
-                        group_found = True
-                        break
+                for framegroup_index in range(len(frame_groups)-1,-1,-1):
+                    if frame_groups[framegroup_index].is_member(p, scaledW, scaledH):
+                        if (group_found):
+                            group_found.add(frame_groups[framegroup_index].show_point, frame_groups[framegroup_index].width, frame_groups[framegroup_index].height, frame_groups[framegroup_index].show_value)
+                            del(frame_groups[framegroup_index])
+                        else:
+                            frame_groups[framegroup_index].add(p, scaledW, scaledH, res[p[1], p[0]])
+                            group_found = frame_groups[framegroup_index]
                 if not group_found:
                     new_frame_group = Framegroup()
                     new_frame_group.add(p, scaledW, scaledH, res[p[1], p[0]])
                     frame_groups.append(new_frame_group)
-
-        # for i in range(len(frame_groups)-1,-1,-1):
-        #     for j in range(i-1,-1,-1):
-        #         if frame_groups[j].is_member(frame_groups[i].show_frame):
-        #             for frame in frame_groups[i].frames:
-        #                 frame_groups[j].add(frame)
-        #             del(frame_groups[i])
-        #             break
 
         for frame_group in frame_groups:
             point = frame_group.show_point
