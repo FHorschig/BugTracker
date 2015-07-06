@@ -13,9 +13,13 @@ class Annotator(object):
         self.__bugs = []
 
 
-    def bugs(self):
+    def bugs(self, ref_image=None):
         """ Returns the list of saved bugs. Needed esp. for Benchmarking."""
-        return self.__bugs
+        if not ref_image:
+            return self.__bugs
+        from cv2 import imread
+        height, width, _ = imread(ref_image).shape
+        return [bug.new_for_reference(height, width) for bug in self.__bugs]
 
 
     def reset_bugs(self):

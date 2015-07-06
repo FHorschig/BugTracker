@@ -36,7 +36,7 @@ class Benchmark(object):
             self.__annotator.reset_bugs()
             self.__iohelper.select_file(reference.imagefile())
             self.__analyzer.process(self.__method)
-            reference.compare_with(self.__annotator.bugs())
+            reference.compare_with(self.__annotator.bugs(reference.imagefile()))
             recalls = recalls + reference.recall()
             precs = precs + reference.precision()
             if show_images:
