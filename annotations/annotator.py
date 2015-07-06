@@ -25,7 +25,8 @@ class Annotator(object):
 
     def add_bug(self, x, y, width, height):
         """Drawn a box around a bug? Tel me with this method"""
-        self.__bugs.append(Bug('img', (x, y, width, height)))
+        relative_coordinates = self.__iohelper.transform(x, y, width, height)
+        self.__bugs.append(Bug('img', relative_coordinates))
 
 
     def save_as_turtle(self, as_string=False):

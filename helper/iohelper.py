@@ -19,6 +19,7 @@ class IOHelper(object):
         self.__template = None
         self.__uri = None
         self.__thumb = None
+        self.__last_image = None
 
 
     def select_file(self, external_file=None, input_func=raw_input):
@@ -48,12 +49,23 @@ class IOHelper(object):
 
     def thumbnail(self):
         """ Returns path for downloaded thumbnail of the selected file."""
-        return self.__download_if_not_cached(self.__thumb, True)
+        self.__last_image = self.__download_if_not_cached(self.__thumb, True)
+        return self.__last_image
 
 
     def image(self):
         """ Returns path for downloaded image of the selected file."""
+        self.__last_image = self.__download_if_not_cached(self.__thumb, True)
         return self.__download_if_not_cached(self.__uri)
+
+
+    def transform(self, x, y, width, height, max_width=None, max_height=None):
+        """ Returns path for downloaded image of the selected file."""
+        from cv2 import imread
+        if not max_width and not max_height:
+            max_width, max_height, _ = imread(self.__last_image).shape
+        return (x / float(max_width), y / float(max_height),
+                width / float(max_width), height / float(max_height))
 
 
     def template(self):
