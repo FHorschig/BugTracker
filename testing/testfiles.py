@@ -14,11 +14,13 @@ class TestFiles(object):
 
     TEMPLATE = CACHE_DIR + 'hesp_template.jpg'
 
-    RDF_SINGLE_BUG = "\n<" + IMG + "#x=100&y=10&w=30&h=50> a dwc:Organism ."
+    RDF_SINGLE_BUG = "\n<" + IMG + "#x=0.5&y=0.5&w=0.5&h=0.25>\n" +\
+                     "    a dwc:Organism ."
     PREFIXES = "@prefix dwc: <http://rs.tdwg.org/dwc/terms/#> .\n" +\
                "@prefix img: <" + IMG + "> .\n"
 
-    BOUNDING_BOX = (100, 10, 30, 50)
+    BOUNDING_BOX = (81, 100, 81, 50)
+    RELATIVE_BOUNDING_BOX = (0.5, 0.5, 0.5, 0.25)
 
     def __init__(self):
         self.__uri = None
@@ -28,7 +30,7 @@ class TestFiles(object):
     def make_bug():
         """ Returns a test bug."""
         from annotations.bug import Bug
-        return Bug('img', TestFiles.BOUNDING_BOX)
+        return Bug('img', TestFiles.RELATIVE_BOUNDING_BOX)
 
 
     @staticmethod

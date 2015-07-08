@@ -31,9 +31,13 @@ class Annotator(object):
         self.__qr_codes.append(code)
 
 
-    def bugs(self):
+    def bugs(self, ref_image=None):
         """ Returns the list of saved bugs. Needed esp. for Benchmarking."""
-        return self.__bugs
+        if not ref_image:
+            return self.__bugs
+        from cv2 import imread
+        height, width, _ = imread(ref_image).shape
+        return [bug.new_for_reference(height, width) for bug in self.__bugs]
 
 
     def reset_bugs(self):
@@ -43,7 +47,8 @@ class Annotator(object):
 
     def add_bug(self, x, y, width, height):
         """Drawn a box around a bug? Tell me with this method"""
-        bug = Bug('img', (x, y, width, height))
+        relative_coordinates = self.__iohelper.transform(x, y, width, height)
+        bug = Bug('img', relative_coordinates)
         self.__add_taxon_information(bug)
         self.__bugs.append(bug)
 
@@ -60,7 +65,7 @@ class Annotator(object):
 
     def __add_taxon_information(self, bug):
         qr_codes = self.__qr_codes
-        
+
         # TODO: find best matching qr code once we have relative coordinates
 
         if qr_codes:

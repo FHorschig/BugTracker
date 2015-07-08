@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 from annotations.bug import Bug
 
 
@@ -13,8 +14,6 @@ class Thresholding(object):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gray_blur = cv2.GaussianBlur(gray, (9, 9), 0)
         thresh = cv2.adaptiveThreshold(gray_blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 31, 11)
-        #thresh = cv2.adaptiveThreshold(thresh1, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 31, 11)
-        #retval, thresh = cv2.threshold(gray_blur, 150, 255, cv2.THRESH_BINARY_INV)
 
         kernel = np.ones((3, 3), np.uint8)
         closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel, iterations=2)
@@ -75,7 +74,7 @@ class Thresholding(object):
 
     def removeLabelContours(self, contours, image):
         result = []
-        blue_label_template = cv2.imread("templates/blue_label_template.jpg")
+        blue_label_template = cv2.imread("templates/negatives/blue_label_template.jpg")
         template_h, template_w = blue_label_template.shape[:2]
 
         for cnt in contours:
@@ -166,6 +165,20 @@ class Thresholding(object):
             _, contours, _ = cv2.findContours(\
                     cont_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+        ## cut edges away if only found one contour around the box
+        cont_img = closing.copy()
+        while len(contours) <= 2:
+            height, width = cont_img.shape[:2]
+            newHeight = height - height/20
+            newWidth = width - width/20
+            cont_img = cont_img[0:newHeight, 0:newWidth]
+            copy = cont_img.copy()
+            if int(cv2.__version__[0]) < 3:
+                contours, _ = cv2.findContours(\
+                        copy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            else:
+                _, contours, _ = cv2.findContours(\
+                        copy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # cv2.imshow('Image', thresh)
         # cv2.waitKey()
@@ -217,9 +230,23 @@ class Thresholding(object):
             max_height = max(max_height, height)
             max_width = max(max_width, width)
 
+
+        negativeSamples = [cv2.imread('templates/negatives/' + image) for image in os.listdir('templates/negatives')]
+        positiveSamples = [cv2.imread('templates/positives/' + image) for image in os.listdir('templates/positives')]
+
+        # templates.extend(positiveSamples)
+
         resized_templates = []
         for tmp in templates:
             resized_templates.append(cv2.resize(tmp, (max_width, max_height)))
+
+        resized_positives = []
+        for tmp in positiveSamples:
+            resized_positives.append(cv2.resize(tmp, (max_width, max_height)))
+
+        resized_negatives = []
+        for tmp in negativeSamples:
+            resized_negatives.append(cv2.resize(tmp, (max_width, max_height)))
 
         match_values = [0] * len(resized_templates)
         for i in range(len(resized_templates)):
@@ -231,6 +258,25 @@ class Thresholding(object):
 
                 match_values[i] += res[0][0]
                 match_values[j] += res[0][0]
+        
+        for i in range(len(resized_templates)):
+            for j in range(len(resized_positives)):
+                im1 = resized_templates[i]
+                im2 = resized_positives[j]
+
+                res = cv2.matchTemplate(im1, im2, cv2.TM_CCOEFF_NORMED)
+
+                match_values[i] += res[0][0]
+
+        for i in range(len(resized_templates)):
+            for j in range(len(resized_negatives)):
+                im1 = resized_templates[i]
+                im2 = resized_negatives[j]
+
+                res = cv2.matchTemplate(im1, im2, cv2.TM_CCOEFF_NORMED)
+
+                match_values[i] -= res[0][0]
+            
 
         best_template_index = match_values.index(max(match_values))
         # cv2.imshow('Image', templates[best_template_index])

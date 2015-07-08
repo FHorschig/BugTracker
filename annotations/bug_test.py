@@ -7,7 +7,7 @@ from testing.testfiles import TestFiles
 class TestBug(unittest.TestCase):
 
     def setUp(self):
-        self.bug = Bug(TestFiles.IMG, TestFiles.BOUNDING_BOX)
+        self.bug = Bug(TestFiles.IMG, TestFiles.RELATIVE_BOUNDING_BOX)
 
 
     def test_includes_organism_into_turtle(self):

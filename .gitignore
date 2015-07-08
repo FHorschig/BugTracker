@@ -2,3 +2,4 @@ cache/
 out/
 testing/out/
 *.pyc
+/benchmarks/references/diffs

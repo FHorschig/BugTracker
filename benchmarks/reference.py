@@ -11,6 +11,7 @@ class Reference(object):
     """ Holds data like count of bugs and checks if a bug is well encircled."""
 
     TOLERANCE = 0.3  # Bounding boxes can be 30% bigger or smaller
+    DIFF_OUT = 'diffs'
 
     def __init__(self, folder, sample_name):
         self.__name = sample_name.strip('.ref')
@@ -32,13 +33,31 @@ class Reference(object):
 
 
     def show_image(self):
-        """ Were all relevant bugs found?"""
+        """ Shows the diff between ideal and calculated bugs."""
+        cv2.imshow('Image', self.__diff_image())
+        cv2.waitKey()
+
+
+    def store_image(self):
+        """ Saves the diff between ideal and calculated bugs to a file."""
+        cv2.imwrite(self.__diff_filename(), self.__diff_image())
+
+
+    def __diff_filename(self):
+        """ Creates a filename for the diff image."""
+        diff_dir = os.path.join(self.__folder, Reference.DIFF_OUT)
+        if not os.path.exists(diff_dir):
+            os.makedirs(diff_dir)
+        return os.path.join(diff_dir, self.__name  +'.jpg')
+
+
+    def __diff_image(self):
+        """ Creates diff between ideal and calculated bugs."""
         img = cv2.imread(self.imagefile()).copy()
         Reference.__draw_bugs(img, self.__true_positives, False, 1)
         Reference.__draw_bugs(img, self.__false_negatives, (0, 255, 0))
         Reference.__draw_bugs(img, self.__false_positives, (0, 0, 255))
-        cv2.imshow('Image', img)
-        cv2.waitKey()
+        return img
 
 
     @staticmethod
