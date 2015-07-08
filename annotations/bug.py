@@ -23,8 +23,9 @@ class Bug(object):
     def set_taxonomic_classification(self, order, family, genus, species):
         self.order = order
         self.family = family
-        self.genus = genus
-        self.species = species
+        # TODO(saechtner|fhorschig): Include if QR codes are more precisely.
+        # self.genus = genus
+        # self.species = species
 
 
     def new_for_reference(self, width, height):

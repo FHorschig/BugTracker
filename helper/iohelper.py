@@ -117,7 +117,7 @@ class IOHelper(object):
 
     def species_csv(self):
         """ Returns path for downloaded and unzipped species csv."""
-        
+
         species_list_path = self.__local_filename(IOHelper.__SPECIES_LIST)
         if os.path.exists(species_list_path):
             return species_list_path
