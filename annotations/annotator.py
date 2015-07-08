@@ -21,6 +21,7 @@ class Annotator(object):
         code = QRCode(symbol.data, symbol.location)
 
         taxonomic_information = self.__get_qr_code_data(code.get_species_id())
+
         if taxonomic_information:
             order = taxonomic_information[0]
             family = taxonomic_information[1]

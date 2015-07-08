@@ -99,12 +99,9 @@ def main(args):
     exit_on_benchmark_initiation(args, method)
     iohelper = configure_iohelper(args)
     annotator = Annotator(iohelper)
-
     analyzer = ip.Analyzer(annotator, iohelper)
-    # analyzer.process(ip.METHODS["QRCODE"]())
 
-    print 'Doing remaining analyses now'
-
+    analyzer.process(ip.METHODS["QRCODE"]())
     analyzer.process(method())
 
     if args.dry_run:
