@@ -149,6 +149,8 @@ class Thresholding(object):
 
     def extractTemplate(self, img):
         image = img.copy()
+        # cv2.imshow('Image', image)
+        # cv2.waitKey()
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gray_blur = cv2.GaussianBlur(gray, (9, 9), 0)
@@ -213,7 +215,7 @@ class Thresholding(object):
 
         # self.showContourRects(image, contours)
 
-        contours = self.removeExtremes(contours, 5, 2)
+        contours = self.removeExtremes(contours, 1, 1.5)
 
         # self.showContourRects(image, contours)
 
