@@ -1,4 +1,4 @@
-"""Provides a class contains all known data of a bug and can save it as RDF."""
+"""Provides a class that contains all known data of a bug and can save it as RDF."""
 
 
 class Bug(object):
@@ -9,10 +9,23 @@ class Bug(object):
         self.__image_url = image_url
         self.__x, self.__y, self.__w, self.__h = bounding_box
 
+        self.order = None
+        self.family = None
+        self.genus = None
+        self.species = None
+
 
     def bounds(self):
         """ Returns (relative) coordinates on image."""
         return self.__x, self.__y, self.__w, self.__h
+
+
+    def set_taxonomic_classification(self, order, family, genus, species):
+        self.order = order
+        self.family = family
+        # TODO(saechtner|fhorschig): Include if QR codes are more precisely.
+        # self.genus = genus
+        # self.species = species
 
 
     def new_for_reference(self, width, height):
@@ -26,8 +39,18 @@ class Bug(object):
 
     def as_turtle(self):
         """Drawn a box around a bug? Tell me with this method"""
-        return "\n<" + self.__image_url + \
-                   "#x=" + str(self.__x) +\
-                   "&y=" + str(self.__y) +\
-                   "&w=" + str(self.__w) +\
-                   "&h=" + str(self.__h) + ">" + " a dwc:Organism ."
+        results = []
+        results.append("\n<{0}#x={1}&y={2}&w={3}&h={4}>"\
+          .format(self.__image_url, self.__x, self.__y, self.__w, self.__h))
+        results.append("\n    a dwc:Organism")
+
+        if self.order:
+            results.append(";\n    dwc:order {0}".format(self.order))
+        if self.family:
+            results.append(";\n    dwc:family {0}".format(self.family))
+        if self.genus:
+            results.append(";\n    dwc:genus {0}".format(self.genus))
+        if self.species:
+            results.append(";\n    dwc:specificEpithet {0}".format(self.species))
+        results.append(" .")
+        return "".join(results)

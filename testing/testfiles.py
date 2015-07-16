@@ -14,7 +14,8 @@ class TestFiles(object):
 
     TEMPLATE = CACHE_DIR + 'hesp_template.jpg'
 
-    RDF_SINGLE_BUG = "\n<" + IMG + "#x=0.5&y=0.5&w=0.5&h=0.25> a dwc:Organism ."
+    RDF_SINGLE_BUG = "\n<" + IMG + "#x=0.5&y=0.5&w=0.5&h=0.25>\n" +\
+                     "    a dwc:Organism ."
     PREFIXES = "@prefix dwc: <http://rs.tdwg.org/dwc/terms/#> .\n" +\
                "@prefix img: <" + IMG + "> .\n"
 
