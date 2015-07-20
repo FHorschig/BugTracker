@@ -3,12 +3,18 @@
 import csv
 import os
 import urllib2
+import zipfile
 
 class IOHelper(object):
     """Provides methods to access filenames, URIs and shared directories."""
 
     __IMAGE_LIST = "http://gbif.naturkundemuseum-berlin.de/"\
                    "hackathon/hackathon_list.csv"
+
+    __SPECIES_ZIP = "http://gbif.naturkundemuseum-berlin.de/"\
+                   "HPI/Arten_in_Kaesten.zip"
+    __SPECIES_LIST = "http://gbif.naturkundemuseum-berlin.de/"\
+                   "HPI/Arten_in_Kaesten.csv"
 
 
     def __init__(self, silent=False):
@@ -19,6 +25,7 @@ class IOHelper(object):
         self.__template = None
         self.__uri = None
         self.__thumb = None
+        self.__last_image = None
 
 
     def select_file(self, external_file=None, input_func=raw_input):
@@ -48,12 +55,23 @@ class IOHelper(object):
 
     def thumbnail(self):
         """ Returns path for downloaded thumbnail of the selected file."""
-        return self.__download_if_not_cached(self.__thumb, True)
+        self.__last_image = self.__download_if_not_cached(self.__thumb, True)
+        return self.__last_image
 
 
     def image(self):
         """ Returns path for downloaded image of the selected file."""
+        self.__last_image = self.__download_if_not_cached(self.__thumb, True)
         return self.__download_if_not_cached(self.__uri)
+
+
+    def transform(self, x, y, width, height, max_width=None, max_height=None):
+        """ Returns relative coordinates for given absolute ones."""
+        from cv2 import imread
+        if not max_width and not max_height:
+            max_width, max_height, _ = imread(self.__last_image).shape
+        return (x / float(max_width), y / float(max_height),
+                width / float(max_width), height / float(max_height))
 
 
     def template(self):
@@ -97,6 +115,19 @@ class IOHelper(object):
         """The stable URI for the currently processed image."""
         return self.__uri
 
+    def species_csv(self):
+        """ Returns path for downloaded and unzipped species csv."""
+
+        species_list_path = self.__local_filename(IOHelper.__SPECIES_LIST)
+        if os.path.exists(species_list_path):
+            return species_list_path
+
+        zip_file = self.__download_if_not_cached(IOHelper.__SPECIES_ZIP)
+        with zipfile.ZipFile(zip_file) as zf:
+            zf.extract(os.path.basename(species_list_path), os.path.dirname(species_list_path))
+
+        return species_list_path
+
 
     def __enforce_directories(self, directory):
         """Creates the set directory paths if they don't exist."""
@@ -134,7 +165,7 @@ class IOHelper(object):
         return True
 
 
-    def __local_filename(self, url, is_thumb):
+    def __local_filename(self, url, is_thumb=False):
         """ Returns the filename of the given url within the cache."""
         filename = os.path.basename(url)
         if is_thumb:
@@ -176,7 +207,7 @@ class IOHelper(object):
             dl_size += len(buf)
             dl_f.write(buf)
             status = r"%10d  [%3.2f%%]" % (dl_size, dl_size * 100. / file_size)
-            status = status + chr(8)*(len(status)+1)
+            status = status + chr(8) * (len(status) + 1)
             print status,
 
         dl_f.close()

@@ -1,6 +1,9 @@
 """Provides a class that creates annotations out of an image analysis."""
 
+import csv
+
 from bug import Bug
+from qr_code import QRCode
 
 
 class Annotator(object):
@@ -11,11 +14,31 @@ class Annotator(object):
     def __init__(self, iohelper):
         self.__iohelper = iohelper
         self.__bugs = []
+        self.__qr_codes = []
 
 
-    def bugs(self):
+    def add_qr_code(self, symbol):
+        code = QRCode(symbol.data, symbol.location)
+
+        taxonomic_information = self.__get_qr_code_data(code.get_species_id())
+
+        if taxonomic_information:
+            order = taxonomic_information[0]
+            family = taxonomic_information[1]
+            species = taxonomic_information[2]
+            genus = species[:species.find(' ')] # genus is the first part of a species name
+            code.set_taxonomic_classification(order, family, genus, species)
+
+        self.__qr_codes.append(code)
+
+
+    def bugs(self, ref_image=None):
         """ Returns the list of saved bugs. Needed esp. for Benchmarking."""
-        return self.__bugs
+        if not ref_image:
+            return self.__bugs
+        from cv2 import imread
+        height, width, _ = imread(ref_image).shape
+        return [bug.new_for_reference(height, width) for bug in self.__bugs]
 
 
     def reset_bugs(self):
@@ -24,8 +47,31 @@ class Annotator(object):
 
 
     def add_bug(self, x, y, width, height):
-        """Drawn a box around a bug? Tel me with this method"""
-        self.__bugs.append(Bug('img', (x, y, width, height)))
+        """Drawn a box around a bug? Tell me with this method"""
+        relative_coordinates = self.__iohelper.transform(x, y, width, height)
+        bug = Bug('img', relative_coordinates)
+        self.__add_taxon_information(bug)
+        self.__bugs.append(bug)
+
+
+    def __get_qr_code_data(self, species_id):
+        with open(self.__iohelper.species_csv(), 'rb') as csvfile:
+            reader = csv.reader(csvfile, delimiter=';', quotechar='\"')
+            for row in reader:
+
+                # row[3] contains the id of a species
+                if row[3] == species_id:
+                    return row
+
+
+    def __add_taxon_information(self, bug):
+        qr_codes = self.__qr_codes
+
+        # TODO: find best matching qr code once we have relative coordinates
+
+        if qr_codes:
+            code = qr_codes[0]
+            bug.set_taxonomic_classification(code.order, code.family, code.genus, code.species)
 
 
     def save_as_turtle(self, as_string=False):

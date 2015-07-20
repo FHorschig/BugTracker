@@ -3,6 +3,13 @@ import cv2
 from scipy import ndimage
 
 try:
+    import zbar
+except:
+    print 'Zbar module not available for qr code detection.'
+
+
+# Import Image from PIL depending on installed library
+try:
     from PIL import Image
 except:
     pass
@@ -11,11 +18,6 @@ try:
     import Image
 except:
     pass
-
-try:
-    import zbar
-except:
-    print 'Zbar module not available for qr code detection.'
 
 
 class QRDetection(object):
@@ -26,19 +28,19 @@ class QRDetection(object):
         self.scanner.parse_config('enable')
 
     def process(self, annotator, io_helper):
-        # wrap image data
         image = cv2.imread(io_helper.image(), cv2.IMREAD_GRAYSCALE)
-
-        symbols = self._scan_image(image)
+        small = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
+        symbols = self._scan_image(small)
         for symbol in symbols:
-            print 'Decoded', symbol.type, 'symbol', '"%s"' % symbol.data, ' at ', symbol.location
-        print 'QR detection done'
+            annotator.add_qr_code(symbol)
+        print 'All qr codes found. Zbar should be finished at this point.'
 
-        # output image with qr codes marked
-        result_image = cv2.imread(io_helper.image())
-        for symbol in symbols:
-            cv2.rectangle(result_image, symbol.location[0], symbol.location[2], (0, 0, 255), 20)
-        return result_image
+        # Output image with qr codes marked
+        # result_image = small
+        # for symbol in symbols:
+        #     cv2.rectangle(result_image, symbol.location[0], symbol.location[2], (0, 0, 255), 20)
+        # return result_image
+
 
     def find(self, annotator, image):
         """ Finds a single QR-Code in an image and returns it."""
@@ -62,5 +64,4 @@ class QRDetection(object):
 
         zbar_image = zbar.Image(width, height, 'Y800', pil_image.tostring())
         self.scanner.scan(zbar_image)
-
         return [symbol for symbol in zbar_image]

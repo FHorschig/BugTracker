@@ -58,5 +58,19 @@ class TestIOHelper(unittest.TestCase):
         self.assertEqual(self.iohelper.image(), TestFiles.IMG_PATH)
 
 
+    def test_transforms_coordinates_by_given_bounds(self):
+        self.iohelper = TestFiles.make_io_helper()
+        self.assertEqual(
+            self.iohelper.transform(100, 200, 200, 100, 500, 400),
+                         (0.2, 0.5, 0.4, 0.25))
+
+
+    def test_transforms_coordinates_by_last_image(self):
+        self.iohelper = TestFiles.make_io_helper()
+        self.iohelper.image()
+        self.assertEqual(self.iohelper.transform(*TestFiles.BOUNDING_BOX),
+                         TestFiles.RELATIVE_BOUNDING_BOX)
+
+
 if __name__ == '__main__':
     unittest.main()
