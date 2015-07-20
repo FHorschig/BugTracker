@@ -6,6 +6,11 @@ from random import randint
 from annotations.bug import Bug
 from imageprocessing.thresholding import Thresholding
 
+from skimage.feature import hog
+from skimage import data, color, exposure
+
+from matplotlib import pyplot as plt
+
 
 class Framegroup(object):
 
@@ -51,13 +56,32 @@ class TemplateMatching(object):
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
         img_bgr = img.copy()
+        
+        bgMax = [0]*3
+        for i,col in enumerate(('b','g','r')):
+            histr = cv2.calcHist([img_bgr],[i],None,[256],[0,256])
+            maxVal = 0
+            for index, value in enumerate(histr):
+                if index>100 and value[0] > maxVal:
+                    maxVal = value[0]
+                    bgMax[i] = index
+
+        bgRange = [(i-25, i+25) for i in bgMax]
+
         img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+        img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+        img_gray_scikit = color.rgb2gray(img_rgb)
         # template = cv2.imread(io_helper.template(),0)
         thresh = Thresholding()
         template_bgr = thresh.extractTemplate(img)
+        template_rgb = cv2.cvtColor(template_bgr, cv2.COLOR_BGR2RGB)
         template_gray = cv2.cvtColor(template_bgr, cv2.COLOR_BGR2GRAY)
+        template_gray_scikit = color.rgb2gray(template_rgb)
         # cv2.imshow('Image', template_bgr)
         # cv2.waitKey()
+
+        fd_tmp, _ = hog(template_gray_scikit, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(1, 1), visualise=True)
+        fd_tmp = fd_tmp / np.linalg.norm(fd_tmp)
 
         w, h = template_gray.shape[::-1]
         
@@ -90,7 +114,41 @@ class TemplateMatching(object):
                     new_frame_group.add(p, scaledW, scaledH, res[p[1], p[0]])
                     frame_groups.append(new_frame_group)
 
+        pow_diff = lambda x,y : np.power(x-y, 2)
+
+        final_frame_groups = []
+
         for frame_group in frame_groups:
+            roi = img_gray_scikit[frame_group.top:frame_group.bottom , frame_group.left:frame_group.right]
+            roi2 = img_bgr[frame_group.top:frame_group.bottom , frame_group.left:frame_group.right]
+
+            roi = cv2.resize(roi, (w, h))
+            fd, _ = hog(roi, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(1, 1), visualise=True)
+            fd = fd / np.linalg.norm(fd)
+
+            res = np.sqrt(sum(map(pow_diff, fd, fd_tmp)))
+            
+            bgAvg = [0]*3
+            for i,col in enumerate(('b','g','r')):
+                histr = cv2.calcHist([roi2],[i],None,[256],[0,256])
+                summ = 0
+                for index, value in enumerate(histr):
+                    bgAvg[i] += value[0]*index
+                    summ += value[0]
+                bgAvg[i] /= summ
+            isBackGround = True
+            for i in range(3):
+                if not (bgRange[i][0] <= bgAvg[i] <= bgRange[i][1]):
+                    isBackGround = False
+                    break
+
+            if res < 0.95 and not isBackGround:
+                final_frame_groups.append(frame_group)
+
+            # cv2.imshow('Image', roi)
+            # cv2.waitKey()
+
+        for frame_group in final_frame_groups:
             point = frame_group.show_point
             annotator.add_bug(point[0], point[1], frame_group.width, frame_group.height)
             cv2.rectangle(img_bgr, point, (point[0] + frame_group.width, point[1] + frame_group.height), (0,0,255), 1)

@@ -26,6 +26,7 @@ class HogTemplateMatching(object):
         tmp_gray = color.rgb2gray(tmp_rgb)
 
         template_bgr = cv2.imread(io_helper.template())
+        template_bgr = cv2.imread('templates/positives/buprestidae_julodinae.png')
         template_rgb = cv2.cvtColor(template_bgr, cv2.COLOR_BGR2RGB)
         template_gray = color.rgb2gray(template_rgb)
 
