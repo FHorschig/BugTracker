@@ -62,6 +62,11 @@ class HogTemplateMatching(object):
         fd_label, hog_label = hog(label_gray, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(1, 1), visualise=True)
 
         pow_diff = lambda x,y : np.power(x-y, 2)
+        
+        fd_tmp = fd_tmp / np.linalg.norm(fd_tmp)
+        fd_template = fd_template / np.linalg.norm(fd_template)
+        fd_img = fd_img / np.linalg.norm(fd_img)
+        fd_label = fd_label / np.linalg.norm(fd_label)
 
         dist_sme = np.sqrt(sum(map(pow_diff, fd_tmp, fd_tmp)))
         dist_tmp = np.sqrt(sum(map(pow_diff, fd_tmp, fd_template)))
