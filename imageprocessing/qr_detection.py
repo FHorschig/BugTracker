@@ -33,13 +33,29 @@ class QRDetection(object):
         symbols = self._scan_image(small)
         for symbol in symbols:
             annotator.add_qr_code(symbol)
-        print 'All qr codes found. Zbar should be finished at this point.'
 
         # Output image with qr codes marked
         # result_image = small
         # for symbol in symbols:
         #     cv2.rectangle(result_image, symbol.location[0], symbol.location[2], (0, 0, 255), 20)
         # return result_image
+
+    def process_alternative(self, annotator, io_helper):
+        image = cv2.imread(io_helper.image(), cv2.IMREAD_GRAYSCALE)
+        step_size = 1000
+        step_overlap = step_size + 100
+
+        height, width = image.shape[:2]
+        for x in range(width / step_size):
+            for y in range(height / step_size):
+                sub_image = image[(y * step_size):(y * step_size + step_overlap), (x * step_size):(x * step_size + step_overlap)]
+                symbols = self._scan_image(image)
+                for symbol in symbols:
+                    annotator.add_qr_code(symbol)
+
+        print 'All qr codes found. Zbar should be finished at this point.'
+
+
 
 
     def find(self, annotator, image):
@@ -61,7 +77,6 @@ class QRDetection(object):
     def _scan_image(self, image):
         pil_image = Image.fromarray(image)
         width, height = pil_image.size
-
         zbar_image = zbar.Image(width, height, 'Y800', pil_image.tostring())
         self.scanner.scan(zbar_image)
         return [symbol for symbol in zbar_image]

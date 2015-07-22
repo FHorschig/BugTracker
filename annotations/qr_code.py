@@ -1,4 +1,4 @@
-"""Provides a that class contains all known data of a bug and can save it as RDF."""
+"""Provides a class that contains all data of a qr code."""
 
 
 class QRCode(object):
@@ -6,7 +6,7 @@ class QRCode(object):
 
 
     def __init__(self, data, location):
-        self.uri = data
+        self.url = data
         self.location = location
 
         self.order = None
@@ -14,8 +14,9 @@ class QRCode(object):
         self.genus = None
         self.species = None
 
+
     def get_species_id(self):
-        return self.uri[(self.uri.rfind('/') + 1) : self.uri.rfind('\.')]
+        return self.url[(self.url.rfind('/') + 1):]
 
 
     def set_taxonomic_classification(self, order, family, genus, species):

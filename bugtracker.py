@@ -27,6 +27,8 @@ def get_arg_parser():
                         help='Executes the benchmarks for the chosen method.')
     parser.add_argument('-s', '--show_intermediates', action='store_true',
                         help='Shows pictures of benchmarks and debug images.')
+    parser.add_argument('-q', '--no_qr', action='store_true',
+                        help='Avoids slow analysis of QR codes.')
     parser.add_argument('-c', '--cache_directory',
                         help='The directory where temporary files are stored.',
                         metavar='')
@@ -86,7 +88,7 @@ def select_method(args):
     if not args.method:
         return ip.METHODS[DEFAULT_METHOD]
     if not args.method in ip.METHODS:
-        print "No valid method! Possible ones:" + ", ".join(ip.METHODS.keys())
+        print "No valid method! Possible ones: " + ", ".join(ip.METHODS.keys())
         exit(0)
     return ip.METHODS[args.method]
 
@@ -101,7 +103,8 @@ def main(args):
     annotator = Annotator(iohelper)
     analyzer = ip.Analyzer(annotator, iohelper)
 
-    analyzer.process(ip.METHODS["QRCODE"]())
+    if not args.no_qr:
+        analyzer.process(ip.METHODS["QRCODE"]())
     analyzer.process(method())
 
     if args.dry_run:
