@@ -86,7 +86,7 @@ def select_method(args):
     if not args.method:
         return ip.METHODS[DEFAULT_METHOD]
     if not args.method in ip.METHODS:
-        print "No valid method! Possible ones:" + ", ".join(ip.METHODS.keys())
+        print "No valid method! Possible ones: " + ", ".join(ip.METHODS.keys())
         exit(0)
     return ip.METHODS[args.method]
 
@@ -101,9 +101,9 @@ def main(args):
     annotator = Annotator(iohelper)
 
     analyzer = ip.Analyzer(annotator, iohelper)
-    # analyzer.process(ip.METHODS["QRCODE"]())
-
-    print 'Doing remaining analyses now'
+    
+    analyzer.process(ip.QRDetection())
+    print 'QR detection done. Doing remaining analyses now.'
 
     analyzer.process(method())
 

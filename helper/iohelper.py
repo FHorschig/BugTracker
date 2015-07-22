@@ -66,9 +66,9 @@ class IOHelper(object):
 
 
     def transform(self, x, y, width, height, max_width=None, max_height=None):
-        """ Returns path for downloaded image of the selected file."""
+        """ Returns relative coordinates bounding box for given absolute values x, y, width, and height."""
         from cv2 import imread
-        if not max_width and not max_height:
+        if not max_width or not max_height:
             max_width, max_height, _ = imread(self.__last_image).shape
         return (x / float(max_width), y / float(max_height),
                 width / float(max_width), height / float(max_height))
