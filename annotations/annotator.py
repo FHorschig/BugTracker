@@ -18,9 +18,27 @@ class Annotator(object):
         self.__common_features_qr_code = None
 
 
-    def bugs(self):
+    def bugs(self, ref_image=None):
         """ Returns the list of saved bugs. Needed esp. for Benchmarking."""
-        return self.__bugs
+        if not ref_image:
+            return self.__bugs
+        from cv2 import imread
+        height, width, _ = imread(ref_image).shape
+        return [bug.new_for_reference(height, width) for bug in self.__bugs]
+
+
+    def add_bug(self, x, y, width, height):
+        """Drawn a box around a bug? Tel me with this method"""
+        relative_coordinates = self.__iohelper.transform(x, y, width, height)
+        bug = Bug('img', relative_coordinates)
+        self.__add_taxon_information(bug)
+        self.__bugs.append(bug)
+
+
+    def __add_taxon_information(self, bug):
+        if self.__common_features_qr_code:
+            code = self.__common_features_qr_code 
+            bug.set_taxonomic_classification(code.order, code.family, code.genus, code.species)
 
 
     def reset_bugs(self):
@@ -28,18 +46,11 @@ class Annotator(object):
         self.__bugs = []
 
 
-    def add_bug(self, x, y, width, height):
-        """Drawn a box around a bug? Tel me with this method"""
-        relative_coordinates = self.__iohelper.transform(x, y, width, height)
-        bug = Bug('img', relative_coordinates)
-        self.__match_qr_code(bug)
-        self.__bugs.append(bug)
-
-
     def add_qr_code(self, symbol):
         code = QRCode(symbol.data, symbol.location)
 
         taxonomic_information = self.__get_qr_code_data(code.get_species_id())
+
         if taxonomic_information:
             order = taxonomic_information[0]
             family = taxonomic_information[1]
@@ -49,6 +60,14 @@ class Annotator(object):
 
         self.__qr_codes.append(code)
         self.__update_common_features_qr_code(code)
+
+
+    def __get_qr_code_data(self, species_id):
+        with open(self.__iohelper.species_csv(), 'rb') as csvfile:
+            reader = csv.reader(csvfile, delimiter=';', quotechar='\"')
+            for row in reader:
+                if row[3] == species_id: # 4th column contains the id of a species
+                    return row
 
 
     def __update_common_features_qr_code(self, code):
@@ -66,24 +85,6 @@ class Annotator(object):
             common_code.family = None
         if common_code.order and code.order and common_code.order != code.order:
             common_code.order = None
-
-
-    def get_qr_codes(self):
-        return self.__qr_codes
-
-
-    def __get_qr_code_data(self, species_id):
-        with open(self.__iohelper.species_csv(), 'rb') as csvfile:
-            reader = csv.reader(csvfile, delimiter=';', quotechar='\"')
-            for row in reader:
-                if row[3] == species_id: # 4th column contains the id of a species
-                    return row
-
-
-    def __match_qr_code(self, bug):
-        if self.__common_features_qr_code:
-            code = self.__common_features_qr_code 
-            bug.set_taxonomic_classification(code.order, code.family, code.genus, code.species)
 
 
     def save_as_turtle(self, as_string=False):

@@ -29,13 +29,13 @@ class QRDetection(object):
 
     def process(self, annotator, io_helper):
         image = cv2.imread(io_helper.image(), cv2.IMREAD_GRAYSCALE)
-        symbols = self._scan_image(image)
-
+        small = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
+        symbols = self._scan_image(small)
         for symbol in symbols:
             annotator.add_qr_code(symbol)
 
         # Output image with qr codes marked
-        # result_image = cv2.imread(io_helper.image())
+        # result_image = small
         # for symbol in symbols:
         #     cv2.rectangle(result_image, symbol.location[0], symbol.location[2], (0, 0, 255), 20)
         # return result_image

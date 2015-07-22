@@ -9,6 +9,7 @@ METHODS = {
     "THRESHOLD": Thresholding,
     "TEMPLATE": TemplateMatching,
     "HOGTEMPLATE": HogTemplateMatching,
+    "QRCODE": QRDetection,
     "TEMPLATE_THRESHOLD": TemplateMatchingWithThresholding,
     "QR_DETECTION": QRDetection,
 }

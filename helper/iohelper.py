@@ -66,7 +66,7 @@ class IOHelper(object):
 
 
     def transform(self, x, y, width, height, max_width=None, max_height=None):
-        """ Returns relative coordinates bounding box for given absolute values x, y, width, and height."""
+        """ Returns relative coordinates for given absolute ones."""
         from cv2 import imread
         if not max_width or not max_height:
             max_width, max_height, _ = imread(self.__last_image).shape
@@ -117,7 +117,7 @@ class IOHelper(object):
 
     def species_csv(self):
         """ Returns path for downloaded and unzipped species csv."""
-        
+
         species_list_path = self.__local_filename(IOHelper.__SPECIES_LIST)
         if os.path.exists(species_list_path):
             return species_list_path

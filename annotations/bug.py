@@ -16,15 +16,25 @@ class Bug(object):
 
 
     def bounds(self):
-        """ Returns coordinates on image."""
+        """ Returns (relative) coordinates on image."""
         return self.__x, self.__y, self.__w, self.__h
 
 
     def set_taxonomic_classification(self, order, family, genus, species):
         self.order = order
         self.family = family
-        self.genus = genus
-        self.species = species
+        # TODO(saechtner|fhorschig): Include if QR codes are more precisely.
+        # self.genus = genus
+        # self.species = species
+
+
+    def new_for_reference(self, width, height):
+        """ Returns bug with absolute coordinates on image."""
+        return Bug(self.__image_url, (
+                          int(self.__x * width),
+                          int(self.__y * height),
+                          int(self.__w * width),
+                          int(self.__h * height)))
 
 
     def as_turtle(self):
@@ -42,5 +52,5 @@ class Bug(object):
             results.append(";\n    dwc:genus {0}".format(self.genus))
         if self.species:
             results.append(";\n    dwc:specificEpithet {0}".format(self.species))
-        results.append(".")
+        results.append(" .")
         return "".join(results)
