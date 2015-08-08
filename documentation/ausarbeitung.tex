@@ -1,0 +1,107 @@
+% Muster für die Seminarausarbeitung
+% HPI Potsdam
+
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{ngerman}
+\usepackage[utf8]{inputenc} %Korrekte Kodierung der Umlaute nach UTF-8
+\usepackage[T1]{fontenc} %Korrekte Kodierung der Umlaute nach UTF-8
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{csquotes}
+\usepackage{epsfig}   % Zum Einbinden von Bildern
+\usepackage{url}      % Korrekter Satz von URLs
+\usepackage{soulutf8}
+\usepackage{color}    % Verwendung von Farben
+\usepackage{listings} % Korrekter Satz von Listings und Quellcode
+
+
+%Hilfs-Fonts - ohne Serifen (hier für Tabellen)
+\newfont{\bib}{cmss8 scaled 1040}
+\newfont{\bibf}{cmssbx8 scaled 1040}
+
+\definecolor{lightgray}{gray}{0.85}
+
+%Seitenformat-Definitionen
+\topmargin0mm
+\textwidth147mm
+\textheight214mm
+\evensidemargin5mm
+\oddsidemargin5mm
+\footskip19mm
+\parindent=0in
+
+\begin{document}          
+
+\begin{titlepage}
+  \begin{center} 
+    \mbox{}
+    \vspace{1cm}
+    
+    {\huge Annotating Digital Images of Insects \\[1em] {\LARGE Automatic Generation of RDF files using Computer Vision Methods}}  
+        
+    \vspace{4cm}
+    
+    Seminararbeit im Seminar \\[1em]
+    {\large \sc Semantic Multimedia Technologies} \\[1em]
+    Sommersemester 2015 \\[1em]
+    Hasso-Plattner-Institut für Softwaresystemtechnik GmbH \\[1em]
+    Universität Potsdam
+    
+    \vspace{4cm}
+    
+		vorgelegt von
+		
+    \vspace{1em}
+    
+		{\Large Leander Neiß} \\
+		{\Large Friedrich Horschig}\\
+		{\Large Clemens Frahnow}\\
+		{\Large Sten Ächtner}
+		
+    \vspace{4em}
+    
+    31th~August 2015
+  \end{center}
+\end{titlepage}
+
+
+\setcounter{page}{1}
+
+% Zweite Seite = Kurzzusammenfassung
+\begin{center}
+{\bf Abstract} 
+\end{center}
+
+\noindent
+
+
+\newpage
+
+% Dritte Seite = Inhaltsverzeichnis
+\tableofcontents 
+
+\newpage
+
+\input{chapters/chapter_1.tex} 
+\newpage
+\input{chapters/chapter_2.tex}
+\newpage
+\input{chapters/chapter_3.tex}
+\newpage
+\input{chapters/chapter_4.tex}
+\newpage
+\input{chapters/chapter_5.tex}
+\newpage
+\input{chapters/chapter_6.tex}
+
+
+%Hier kommt das Literaturverzeichnis
+\newpage
+
+\addcontentsline{toc}{section}{Bibliography} % Zeile für das Inhaltsverzeichnis
+
+\bibliography{bibfile}
+\bibliographystyle{alphadin}
+
+\end{document}

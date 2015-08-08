@@ -3,3 +3,9 @@ out/
 testing/out/
 *.pyc
 /benchmarks/references/diffs
+*.log
+*.aux
+*.bbl
+*.blg
+*.gz
+*.toc
