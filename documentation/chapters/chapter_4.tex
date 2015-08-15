@@ -3,3 +3,31 @@
 \label{sec_concept}
 
 TODO: Explain why machine learning is a hard-to-implement approach. Huge set of human-controlled training data and stuff.
+
+\subsection{Basic segmentation or something}
+\subsection{Threshold-based Algorithm or something}
+\subsection{Template Matching or something}
+\subsubsection{Template Extraction or something}
+\subsubsection{Sliding Window or something}
+\subsubsection{Refinement of results or something}
+
+\subsection{Comparing Effectiveness of Algorithms}
+To have an objective measurement of the effectiveness of changes in the algorithm, we will consider two established factors for data quality. 
+They are based on a gold standard. 
+The gold standard will be a manually selected and annotated subset of the given data. 
+All algorithms will be tested against the same set of data and compared against the standard.
+Some data will be rightfully found (true positives), some will be wrongfully found (false positives) and some insects won't be found even if they should have been (false negatives)
+
+The first factor is the recall that measures how many relevant results were retrieved. 
+This is achieved by dividing the true positives by all relevant results (true positives and true negatives).
+
+The second factor is precision of the results how many of the found results were relevant. 
+This is achieved by dividing the the true positives by all positives (true and negative).
+
+To raise the meaning of each factor, they are usually combined in a harmonic mean called F-Measure. 
+The resulting value can only be maximized by maximizing both values. 
+A very low value in one of the factors will result in an overall low factor. 
+The F-Measure is calculated as follows: 
+\[
+F-Measure = 2*\frac{Precision*Recall}{Precision+Recall}
+\]
