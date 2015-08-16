@@ -2,9 +2,21 @@
 \section{Implementation}
 \label{sec_implementation}
 
+\subsection{Algorithms}
+\subsubsection{Threshold-based Analysis}
+\subsubsection{...}
 
-
+\subsection{Annotations}
+\subsubsection{QR Code Analysis}
 
 \subsection{Integrating Benchmarking}
-Methods
-test set (set maker)
+Due to the availability of each algorithm as single step in the pipeline, it was easy to execute them in the exact same environment with the exact same parameters. 
+Different from the usual pipeline, the step of selecting the examples was automated and the step of writing out RDF files was replaced by analyzing the discovered bugs.
+
+To have a reliable set of data (a ``gold standard''), we created annotations for some photos manually. 
+The photos were mainly taken randomly. 
+In addition, we chose some photos which we found hard to analyze (due to transparent wings, difficult shapes or different sizes).
+
+The actual gold standard was not a set of RDF files but a collections of comma-separated values. 
+These CSV files were easier to create (with a helping tool we wrote to manually annotate the bugs) and easier to analyze than RDF documents with same contents.
+The actual results, their effect on our process and how we could optimize the benchmarking process will be discussed in chapter \ref{sec_conclusion}.
