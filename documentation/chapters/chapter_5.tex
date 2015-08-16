@@ -7,6 +7,18 @@
 \subsubsection{...}
 
 \subsection{Annotations}
+The simplest annotation is just an RDF-triple locating a bug on an image and describing it as Organism. 
+The definition for an Organism and all properties we use to describe are part of the Darwin Core \footnote{http://rs.tdwg.org/dwc/} Standard of describing living organisms.
+
+We can extract further information from a CSV file that was provided by the Deutsches Naturkundemuseum.
+It contains a general overview of all species in a photograph. 
+This includes dates and information about the family.
+
+Whenever a new bug is found, it is added to the collection of bugs that will be written as RDF file at the end.
+It is possible to annotate every bug with additional, specific properties (apart from those that apply to every insect in the box).
+
+Such information can be found in QR codes as described in the next section.
+
 \subsubsection{QR Code Analysis}
 
 \subsection{Integrating Benchmarking}
