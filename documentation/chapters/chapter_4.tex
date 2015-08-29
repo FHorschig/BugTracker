@@ -33,9 +33,11 @@ Since the used parameters for the function are the distances to the mean, the fu
 The resulting formula for this function can be seen here:
 \[ccoeff = \frac{\sum_{x,y} (T(x,y) \times I(x',y'))}{\sqrt{\sum_{x,y} (T(x,y)^2 \times \sum_{x,y} I(x',y')^2)}} \]
 Where T(x,y) is the pixel value difference from the mean in the template at position x, y and I(x', y') the corresponding pixel value difference from the mean in the sub-image.
+
 \subsubsection{Histogram of Oriented Gradients}
 Going away from the pure pixel values, the Histogram of Oriented Gradients function (short ``HOG'') is based on gradient directions.
 It counts the number of gradient orientations in each (self defined) section of the sub-image and compares the result with that from the template.
 \cite{hog_function}.
 
 \subsection{Machine Learning}
+
