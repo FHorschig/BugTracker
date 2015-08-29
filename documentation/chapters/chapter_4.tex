@@ -2,9 +2,17 @@
 \section{Concepts}
 \label{sec_concepts}
 
-TODO: Explain why machine learning is a hard-to-implement approach. Huge set of human-controlled training data and stuff.
+\subsection{Edge Detection}
+Edge Detection is a part of segmentation in image processing.
+It is used to isolate some areas of an image from others, such as shapes in the foreground from the background.
+An edge is determined by the difference of its adjacent brightness value.
+The points where the image brightness has discontinuities are represented as curved line segments, the \textit{edges}.
+A threshold image of the original image is computed to determine whether two brightness values are classified as a discontinuity.
+Using a global, fixed threshold would classify everything as an edge, that has one adjacent brightness above, and one adjacent brightness below a specific, predefined value.
+As second possibility there is an adaptive threshold.
+It sets the threshold adaptively for each area in the image, using the mean brightness of that area.
 
-\subsection{Contour Detection}
+
 \subsection{Template Matching}
 \subsubsection{Correlation Coefficient}
 \subsubsection{Histogram of Oriented Gradients}
