@@ -2,15 +2,31 @@
 \section{Implementation}
 \label{sec_implementation}
 
+We implemented BugTracker as commandline-based Python tool.
+It takes an image as input, and produces an RDF file with annotations of the found insects.
+Template
+
 \subsection{Contour Detection}
+As a basic approach, we use Contour Detection to find insects in a given image.
+The input image converted to gray-scale is used to detect edges as mentioned in Section \ref{sec_concepts}.
+We use an adaptive threshold to create a binary image, which is then transformed by a morphological operation from OpenCV, in order to close gaps in areas of interest.
+On this transformed binary image, an OpenCV contour detection function is applied, which groups connected edges into one contour.
+Those contours are a first approach on finding something on an image.
+However, the threshold and edge detection algorithm can not possibly know, what we are looking for.
+The found contours can be anything that appears to stand out from the background, not only insects.
+This method is a good approach to just find anything on the image, but not precise enough for our needs.
+
+
 \subsection{Template Matching}
+
+\subsection{Automated Template Extraction}
 
 
 \subsection{Annotations}
 The simplest annotation is just an RDF-triple locating a bug on an image and describing it as Organism. 
 The definition for an Organism and all properties we use to describe are part of the Darwin Core \footnote{http://rs.tdwg.org/dwc/} Standard of describing living organisms.
 
-We can extract further information from a CSV file that was provided by the Deutsches Naturkundemuseum.
+We can extract further information from a CSV file that was provided by the Natural History Museum of Berlin.
 It contains a general overview of all species in a photograph. 
 This includes dates and information about the family.
 
