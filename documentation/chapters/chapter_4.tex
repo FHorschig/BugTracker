@@ -1,4 +1,4 @@
-%
+%!TEX root = ../ausarbeitung.tex
 \section{Concepts}
 \label{sec_concepts}
 
@@ -6,7 +6,21 @@ TODO: Explain why machine learning is a hard-to-implement approach. Huge set of 
 
 \subsection{Contour Detection}
 \subsection{Template Matching}
+Template Matching in image processing basically is a method to extract parts of an image that match with a chosen template based on a comparison function.
+The algorithm takes all possible template sized subimages and uses the comparison function to yield a value for the similarity to the template.
+Based on this value, the best match can be found, or giving a threshold value x, all results with a higher or lower value than x can be gained.
+There are multiple comparison functions like pixelwise comparison or a simple perfect-match function.
+The most relevant functions used in this paper are Correlation Coefficient and Histogram of Oriented Gradients which are introduced in the following sections.
+
 \subsubsection{Correlation Coefficient}
+The Correlation Coefficient Function (short CCOEFF) first calculates the mean of all pixel values of the template as well as the mean of the pixel values in the selected subimage.
+By iterating over all pixels in the template, two subvalues are calculated per iteration:
+The first one is the signed distance of the pixelvalue in the template to the mean value of the template.
+The other one is the signed distance of the value in the subimage at the correspondung pixelposition to the mean value of the subimage.
+Both values are multiplied in each iteration and the resulting values of all iteraitons are sumed up.
+To have a normed value for the comparison, the result is divided by the highest possible value.
+Since the used parameters for the function are the distances to the mean, the function calculates a value independent of the absolut values. 
 \subsubsection{Histogram of Oriented Gradients}
+
 \subsection{Machine Learning}
 
