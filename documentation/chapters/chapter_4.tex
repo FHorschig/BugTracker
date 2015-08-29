@@ -1,4 +1,4 @@
-%
+%!TEX root = ../ausarbeitung.tex
 \section{Concepts}
 \label{sec_concepts}
 
@@ -14,7 +14,26 @@ It sets the threshold adaptively for each area in the image, using the mean brig
 
 
 \subsection{Template Matching}
-\subsubsection{Correlation Coefficient}
-\subsubsection{Histogram of Oriented Gradients}
-\subsection{Machine Learning}
+Template Matching in image processing basically is a method to extract parts of an image that match with a chosen template based on a comparison function.
+The algorithm takes all possible template sized subimages and uses the comparison function to yield a value for the similarity to the template.
+Based on this value, the best match can be found, or giving a threshold value x, all results with a higher or lower value than x can be gained.
+There are multiple comparison functions like pixelwise comparison or a simple perfect-match function.
+The most relevant functions used in this paper are Correlation Coefficient and Histogram of Oriented Gradients which are introduced in the following sections.
 
+\subsubsection{Correlation Coefficient}
+The Correlation Coefficient Function (short ''CCOEFF'') first calculates the mean of all pixel values of the template as well as the mean of the pixel values in the selected subimage.
+By iterating over all pixels in the template, two subvalues are calculated per iteration:
+The first one is the signed distance of the pixelvalue in the template to the mean value of the template.
+The other one is the signed distance of the value in the subimage at the correspondung pixelposition to the mean value of the subimage.
+Both subvalues are multiplied in each iteration and the resulting values of all iteraitons are sumed up.
+To have a normed value for the comparison, the result is divided by the highest possible value.
+Since the used parameters for the function are the distances to the mean, the function calculates a value independent of the absolut values.
+The resulting formula for this function can be seen here:
+\[ccoeff = \frac{\sum_{x,y} (T(x,y) \times I(x',y'))}{\sqrt{\sum_{x,y} (T(x,y)^2 \times \sum_{x,y} I(x',y')^2)}} \]
+Where T(x,y) is the pixel value difference from the mean in the template at position x, y and I(x', y') the corresponding pixel value difference from the mean in the subimage.
+\subsubsection{Histogram of Oriented Gradients}
+Going away from the pure pixel values, the Histogram of Oriented Gradients function (short ''HOG'') is based on gradient directions.
+It counts the number of gradient orientations in each (self defined) section of the subimage and compares the result with that from the template.
+\cite{hog_function}.
+
+\subsection{Machine Learning}
