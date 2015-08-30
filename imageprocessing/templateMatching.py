@@ -49,7 +49,7 @@ class TemplateMatching(object):
         # self.multiscalefactors = [0.7, 1.0, 1.3]
         self.multiscalefactors = [1.0]
 
-    def process(self, annotator, io_helper):
+    def process(self, annotator, io_helper, demo):
         img = cv2.imread(io_helper.thumbnail())
 
         methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
@@ -73,7 +73,7 @@ class TemplateMatching(object):
         img_gray_scikit = color.rgb2gray(img_rgb)
         # template = cv2.imread(io_helper.template(),0)
         thresh = Thresholding()
-        template_bgr = thresh.extractTemplate(img)
+        template_bgr = thresh.extractTemplate(img, demo)
         template_rgb = cv2.cvtColor(template_bgr, cv2.COLOR_BGR2RGB)
         template_gray = cv2.cvtColor(template_bgr, cv2.COLOR_BGR2GRAY)
         template_gray_scikit = color.rgb2gray(template_rgb)
