@@ -3,6 +3,10 @@
 \label{sec_eval}
 
 \subsection{Benchmarks}
+To evaluate our tool, we created a benchmark set containing several images where we manually marked the insects.
+The result of one benchmark run is expressed as \textit{Recall}, \textit{Precision}, and \textit{F-Measure}.
+
+\subsection{Benchmarks}
 Although F-Measure is a very common way to measure the quality of results, we consider changing  to another method that puts a higher weight on the quantity of results.
 Usually, it would be easier to refine existing results than to find additional insects. 
 Also, when eliminating bad insects, it is possible that rightfully found insects were removed just because the bounding box didn't fit correctly.
