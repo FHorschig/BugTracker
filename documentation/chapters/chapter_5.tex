@@ -22,30 +22,52 @@ To provide the algorithm an imagination of how the shapes which it is supposed t
 A possibility for that is using a template matching algorithm.
 OpenCV provides this functionality, so the only thing to do was to define a comparison function.
 By testing it turned out that CCOEFF gave the best results.
-As templates cropped images from the insect library were used like in figure ???.
+As templates cropped images from the insect library were used like in Figure \ref{fig:hesp_tmp}.
+\begin{center}
+	\includegraphics[width=0.1\textwidth]{images/hesp_template.jpg}
+	\captionof{figure}{A template for butterflies}
+	\label{fig:hesp_tmp}
+\end{center}
 The result of that openCV algorithm was a list of all sub-images with their corresponding match values describing how good they match the template.
 The part of the image where we took the template from, of course always had a value of 1, which is the best possible value.
-All other values are beween -1 and 1, where a higher value means, that it matches the template better.
+All other values are between -1 and 1, where a higher value means, that it matches the template better.
 The next step is to set a threshold, defining from which value on sub-images are taken as matching.
-A threshold of 0.41 worked best for us to avoid too many false posivies and true negatives.
+A threshold of 0.41 worked best for us to avoid too many false positives and true negatives.
 
-Using this algorithm a result like in figure ??? is generated.
+Using this algorithm a result like in Figure \ref{fig:no_frame_group} is generated.
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{images/no_frame_group.jpg}
+	\captionof{figure}{Multiple matches per insect}
+	\label{fig:no_frame_group}
+\end{center}
 
-As you can see there are mostly multiple sub-images close to a match that are recognized as a match.
-To group such corresponding matches together to one match, an overlay threshold of 30% was defined to tell the algorithm when two frames are put together.
-The same image as in fugure ??? now with frame grouping in figure ???
+As you can see the wide borders of the frames are the result of multiple overlapping matches, that are showing the same insect.
+To group such corresponding matches together to one match, an overlay threshold of 30\% was defined to tell the algorithm when two frames are put together.
+The same image as in Figure \ref{fig:no_frame_group} now with frame grouping in Figure \ref{fig:with_frame_group}
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{images/with_frame_group.jpg}
+	\captionof{figure}{Only one frame per insect after grouping corresponding ones together}
+	\label{fig:with_frame_group}
+\end{center}
 
-In figure ??? you can see the results with the given algorithms so far.
+In Figure \ref{fig:with_frame_group} you can see the results with the given algorithms so far.
 As you can see there are many false positives left, which have to be discarded.
 This is done by a second comparison using Histogram of Oriented Gradients.
 If the matching value is below 0.95, the result is discarded.
 Another problem is dirt and other unexpected noise on the image, that sometimes matches the template pretty well as a false positive.
+An example for that is the false positive in Figure \ref{fig:with_frame_group} on the bottom right.
+The soft shadow in the background describes a shape almost like one of the bugs.
 To get rid of those results, the histogram of the whole image is generated to get the background color.
 All matches now have to have an average color that has a certain difference to the background color to be taken as a match.
-A final result can be seen in figure ???.
+A final result can be seen in Figure \ref{fig:final_frames}.
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{images/final_frames.jpg}
+	\captionof{figure}{The bottom right frame has gone by analyzing the histogram}
+	\label{fig:final_frames}
+\end{center}
 
 \subsection{Automated Template Extraction}
-Until this point, the templated were provided manually by cropping images. 
+Until this point, the templates were provided manually by cropping images. 
 Since the annotation has to run fully automated, the template extraction also has to be done by the algorithm.
 The Edge Detection algorithm is reused here to provide a list of potential templates.
 This list is still full of false positives that have to be discarded.
