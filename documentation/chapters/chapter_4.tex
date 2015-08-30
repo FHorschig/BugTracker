@@ -1,0 +1,64 @@
+%!TEX root = ../ausarbeitung.tex
+\section{Concepts}
+\label{sec_concepts}
+
+\subsection{Edge Detection}
+Edge Detection is a part of segmentation in image processing.
+It is used to isolate some areas of an image from others, such as shapes in the foreground from the background.
+An edge is determined by the difference of its adjacent brightness value.
+The points where the image brightness has discontinuities are represented as curved line segments, the \textit{edges}.
+A threshold image of the original image is computed to determine whether two brightness values are classified as a discontinuity.
+Using a global, fixed threshold would classify everything as an edge, that has one adjacent brightness above, and one adjacent brightness below a specific, predefined value.
+As second possibility there is an adaptive threshold.
+It sets the threshold adaptively for each area in the image, using the mean brightness of that area.
+
+
+\subsection{Template Matching}
+Template Matching in image processing basically is a method to extract parts of an image that match with a chosen template based on a comparison function.
+The algorithm takes all possible template sized sub-images and uses the comparison function to yield a value for the similarity to the template.
+Based on this value, the best match can be found, or giving a threshold value x, all results with a higher or lower value than x can be gained.
+There are multiple comparison functions like pixel-wise comparison or a simple perfect-match function.
+
+The most relevant functions used in this paper are Correlation Coefficient and Histogram of Oriented Gradients which are introduced in the following sections.
+
+\subsubsection{Correlation Coefficient}
+The Correlation Coefficient Function (short ``CCOEFF'') first calculates the mean of all pixel values of the template as well as the mean of the pixel values in the selected sub-image.
+By iterating over all pixels in the template, two sub-values are calculated per iteration:
+The first one is the signed distance of the pixel value in the template to the mean value of the template.
+The other one is the signed distance of the value in the sub-image at the corresponding pixel position to the mean value of the sub-image.
+Both sub-values are multiplied in each iteration and the resulting values of all iterations are summed up.
+To have a normed value for the comparison, the result is divided by the highest possible value.
+Since the used parameters for the function are the distances to the mean, the function calculates a value independent of the absolute values.
+
+The resulting formula for this function can be seen here:
+\[ccoeff = \frac{\sum_{x,y} (T(x,y) \times I(x',y'))}{\sqrt{\sum_{x,y} (T(x,y)^2 \times \sum_{x,y} I(x',y')^2)}} \]
+Where T(x,y) is the pixel value difference from the mean in the template at position x, y and I(x', y') the corresponding pixel value difference from the mean in the sub-image.
+
+\subsubsection{Histogram of Oriented Gradients}
+Going away from the pure pixel values, the Histogram of Oriented Gradients function (short ``HOG'') is based on gradient directions.
+It counts the number of gradient orientations in each (self defined) section of the sub-image and compares the result with that from the template.
+\cite{hog_function}.
+
+\subsection{Machine Learning}
+
+\subsection{Comparing Effectiveness of Algorithms}
+To have an objective measurement of the effectiveness of changes in the algorithm, we will consider two established factors for data quality. 
+They are based on a gold standard. 
+The gold standard will be a manually selected and annotated subset of the given data. 
+All algorithms will be tested against the same set of data and compared against the standard.
+Some data will be rightfully found (true positives), some will be wrongfully found (false positives) and some insects won't be found even if they should have been (false negatives)
+
+The first factor is the recall that measures how many relevant results were retrieved. 
+This is achieved by dividing the true positives by all relevant results (true positives and true negatives).
+
+The second factor is precision of the results how many of the found results were relevant. 
+This is achieved by dividing the the true positives by all positives (true and negative).
+
+To raise the meaning of each factor, they are usually combined in a harmonic mean called F-Measure. 
+The resulting value can only be maximized by maximizing both values. 
+A very low value in one of the factors will result in an overall low factor. 
+The F-Measure is calculated as follows: 
+\[
+F-Measure = 2*\frac{Precision*Recall}{Precision+Recall}
+\]
+
