@@ -217,7 +217,7 @@ class Thresholding(object):
 
         # self.showContourRects(image, contours)
 
-        contours = self.removeExtremes(contours, 1, 1.5)
+        contours = self.removeExtremes(contours, 5, 2)
 
         if demo:
             self.showContourRects(image, contours)
