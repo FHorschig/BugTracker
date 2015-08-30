@@ -10,11 +10,17 @@ Template
 As a basic approach, we use Contour Detection to find insects in a given image.
 The input image converted to gray-scale is used to detect edges as mentioned in Section \ref{sec_concepts}.
 We use an adaptive threshold to create a binary image, which is then transformed by a morphological operation from OpenCV, in order to close gaps in areas of interest.
-On this transformed binary image, an OpenCV contour detection function is applied, which groups connected edges into one contour.
+On this transformed binary image, an OpenCV contour detection function is applied, which groups connected edges into one contour (Figure \ref{fig:thresh}).
 Those contours are a first approach on finding something on an image.
 However, the threshold and edge detection algorithm can not possibly know, what we are looking for.
 The found contours can be anything that appears to stand out from the background, not only insects.
 This method is a good approach to just find anything on the image, but not precise enough for our needs.
+\begin{center}
+	\includegraphics[width=1.0\textwidth]{images/chap5_thresh.png}
+	\captionof{figure}{Binary image after using an adaptive threshold and morphological closing (left).
+		Contour image created from binary image (right).}
+	\label{fig:thresh}
+\end{center}
 
 
 \subsection{Template Matching}
