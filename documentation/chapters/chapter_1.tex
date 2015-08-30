@@ -1,3 +1,29 @@
 % Vierte Seite = Hier geht's eigentlich richtig los
 \section{Introduction}
 \label{sec_introduction}
+
+The \emph{Museum für Naturkunde}, a natural history museum in Berlin, Germany, features an insect collection consisting of several million insect specimen.
+This collection is digitalized in the context of the museum's EoS project.
+Typically, the resulting images show multiple insect boxes  filled with insect specimen of the same species.
+On average, such an image is about 100 MB in size and contains about 50 specimen.
+
+In this paper, we present BugTracker, a tool developed to annotate the museum's insect collection images with information about the location of each single specimen in the image and what type of insect it is.
+This should support the museum's work with those rather large images in order to use and further process them.
+
+The paper presents an approach based on template matching that allows the automatic annotation of insect images with semantic information.
+The algorithm itself is a multi-staged approach consisting of four main subtasks:
+
+\begin{description}
+    \item[Contour detection] to automatically generate template candidates and extract one of them as the actual template
+    \item[Template matching] to identify the location of all insect specimen in the image and calculate their bounding box
+    \item[QR code analysis] to identify qr codes, extract a species identifier, and lookup the biological information associated with it from a reference data set
+    \item[Annotation] of the image by creating the output rdf file
+\end{description}
+
+This work is created in the context of the \emph{Semantic Multimedia Technologies} seminar during the summer semester 2015 at the Hasso Plattner Institute, University of Potsdam, Germany.
+
+The remainder of this paper is structured as follows. 
+Section \ref{sec_related} highlights related work.
+The motivation for this work is presented in section \ref{sec_motivation} and detailed information about the implementation are described in the next section.
+The results are evaluated in section \ref{sec_eval}.
+In the last section we draw a conclusion and discuss it.
