@@ -18,10 +18,10 @@ class Analyzer(object):
         self.qr_codes = []
 
 
-    def process(self, method):
+    def process(self, method, demo=False):
         """Extracts features and stores findings into given annotator."""
 
-        self.result_image = method.process(self.__annotator, self.__iohelper)
+        self.result_image = method.process(self.__annotator, self.__iohelper, demo)
 
 
     def show_result(self):

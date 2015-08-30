@@ -23,6 +23,8 @@ def get_arg_parser():
                         help='Avoids IO and downloads.')
     parser.add_argument('--test', action='store_true',
                         help='Execute all tests and exit')
+    parser.add_argument('-d', '--demo', action='store_true',
+                        help='Shows intermediate results.')
     parser.add_argument('-b', '--benchmark', action='store_true',
                         help='Executes the benchmarks for the chosen method.')
     parser.add_argument('-s', '--show_intermediates', action='store_true',
@@ -102,6 +104,11 @@ def main(args):
     iohelper = configure_iohelper(args)
     annotator = Annotator(iohelper)
     analyzer = ip.Analyzer(annotator, iohelper)
+
+    if args.demo:
+        analyzer.process(method(), True)
+        analyzer.show_result()
+        exit(0)
 
     if not args.no_qr:
         analyzer.process(ip.METHODS["QRCODE"]())
