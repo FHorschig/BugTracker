@@ -4,17 +4,16 @@
 
 \subsection{Benchmarks}
 To evaluate our tool, we created a benchmark set containing several images where we manually marked the insects.
-The result of one benchmark run is expressed as \textit{Recall}, \textit{Precision}, and \textit{F-Measure}.
-
-\subsection{Benchmarks}
-Although F-Measure is a very common way to measure the quality of results, we consider changing  to another method that puts a higher weight on the quantity of results.
+The result of one benchmark run is expressed as \textit{Recall}, \textit{Precision}, and \textit{F-Measure} \cite{f_measure}.
+Although F-Measure is a very common way to measure the quality of results, we consider changing  to another method that puts a higher weight on the quantity of results. 
 Usually, it would be easier to refine existing results than to find additional insects. 
-Also, when eliminating bad insects, it is possible that rightfully found insects were removed just because the bounding box didn't fit correctly.
-For the user of our results, it would be much more useful to see an image of multiple insects or a cropped insect instead of no result.
+Also, when looking for false positives, it is possible that true positives are found because the bounding box did not fit correctly.
+However, it is more useful to see an image of multiple insects or a cropped insect instead of no result at all.
 
 The test set is crucial for the accuracy of the benchmark. 
-With few doubt, it would be better to extend the test set. 
-The problem is that edge cases (like very small or very thin insects) might lose their importance when a majority of bugs has a similar shape.
-We can't verify this grade of diversity as we had access to a subset of all images.
+It is always good to have a large test set to improve the accuracy of the benchmark.
+Therefore continuous extending of the test set is needed. 
 
-In case this assumption holds true, the benchmark should verify two test sets where one contains all edge cases.
+\subsection{Results}
+
+The results show nothing!!
