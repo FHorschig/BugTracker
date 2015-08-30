@@ -27,7 +27,7 @@ class QRDetection(object):
         self.scanner = zbar.ImageScanner()
         self.scanner.parse_config('enable')
 
-    def process(self, annotator, io_helper):
+    def process(self, annotator, io_helper, demo=False):
         image = cv2.imread(io_helper.image(), cv2.IMREAD_GRAYSCALE)
         small = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
         symbols = self._scan_image(small)

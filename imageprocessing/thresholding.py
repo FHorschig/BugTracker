@@ -147,8 +147,11 @@ class Thresholding(object):
         cv2.waitKey()
 
 
-    def extractTemplate(self, img):
+    def extractTemplate(self, img, demo):
         image = img.copy()
+        if demo:
+            cv2.imshow('Image', image)
+            cv2.waitKey()
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gray_blur = cv2.GaussianBlur(gray, (9, 9), 0)
@@ -180,15 +183,16 @@ class Thresholding(object):
                 _, contours, _ = cv2.findContours(\
                         copy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        # cv2.imshow('Image', thresh)
-        # cv2.waitKey()
-        # cv2.imshow('Image', closing)
-        # cv2.waitKey()
-        # cv2.imshow('Image', cont_img)
-        # cv2.waitKey()
+        if demo:
+            cv2.imshow('Image', thresh)
+            cv2.waitKey()
+            cv2.imshow('Image', closing)
+            cv2.waitKey()
         # self.showContourBubbles(image, contours)
         # self.showContourRects(image, contours)
 
+        if demo:
+            self.showContourRects(image, contours)
 
         contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 50]
 
@@ -213,9 +217,10 @@ class Thresholding(object):
 
         # self.showContourRects(image, contours)
 
-        contours = self.removeExtremes(contours, 5, 2)
+        contours = self.removeExtremes(contours, 1, 1.5)
 
-        # self.showContourRects(image, contours)
+        if demo:
+            self.showContourRects(image, contours)
 
 
         templates = []
@@ -279,7 +284,8 @@ class Thresholding(object):
             
 
         best_template_index = match_values.index(max(match_values))
-        # cv2.imshow('Image', templates[best_template_index])
-        # cv2.waitKey()
+        if demo:
+            cv2.imshow('Image', templates[best_template_index])
+            cv2.waitKey()
 
         return templates[best_template_index]
