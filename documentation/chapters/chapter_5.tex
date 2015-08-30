@@ -45,11 +45,31 @@ All matches now have to have an average color that has a certain difference to t
 A final result can be seen in figure ???.
 
 \subsection{Automated Template Extraction}
-Until this point, the templated were provided manually by cropping images. 
+Until this point, the templates were provided manually by cropping images. 
 Since the annotation has to run fully automated, the template extraction also has to be done by the algorithm.
 The Edge Detection algorithm is reused here to provide a list of potential templates.
 This list is still full of false positives that have to be discarded.
-Setting a maximum value for the ratio can help finding most of them and also .......
+In multiple steps, the following contours are thrown away: 
+\begin{enumerate}
+	\item Very small contours, that consist of less than 50 points.
+	\item Contours that appear to be a label, if identified correctly.
+	This is done by a template matching against some sample labels which were manually cropped out.
+	Since labels look quite similar in each image, there is a chance that with this step those contours are discarded.
+	\item 5\% of the number of contours are removed which have the highest height, 5\% which have the lowest height, 5\% that have the highest width, and 5\% that have the lowest width.
+	This removes contours that have caught for example noise on the side of an image, which resembles e.g. the edge of the insect box (very long but thin contour).
+	\item Contours with an extreme small or big area.
+\end{enumerate}
+After these steps, we have reduced the number of found contours that are potential templates for our Template Matching.
+From the current set of potential templates, we extract one, which is representative for the insect species in that image.
+This is done by apply template matching to all of our potential templates against each other.
+The OpenCV matchTemplate function yields a score when matching a template against another image.
+The higher the score, the better the match.
+So when matching each potential template against each other, we sum up the scores that are yielded, so that in the end the potential template with the highest score is our actual extracted template.
+This of course has the premise, that after reducing the set of potential templates, there are more candidates which are actual insects, than other stuff, like labels, or just dirt on the box.
+That is most of the time the case, but to not completely rely on that premise, we add multiple previously cropped out samples to the template matching process to improve the score of the templates that are actual insects.
+We also add negative samples, such as labels, which should reduce the score of unwanted templates.
+After this process, we choose the potential template with the highest match score as our extracted template for our Template Matching step.
+
 \subsection{Annotations}
 The simplest annotation is just an RDF-triple locating a bug on an image and describing it as Organism. 
 The definition for an Organism and all properties we use to describe are part of the Darwin Core \footnote{http://rs.tdwg.org/dwc/} Standard of describing living organisms.
