@@ -4,29 +4,29 @@
 
 \subsection{Semi-automated Insect Analyzer}
 
-The Natural History Museum of London launched a project to achieve the goal of digitalizing their insect photographs. 
+The \emph{Natural History Museum} in London launched a project to achieve the goal of digitalizing their insect photographs. 
 The resulting tool is called ``Inselect'' \cite{Inselect} and provides assistance for semi-automatic annotation of insects. 
 During the time of this writing, their approach uses edge detection from the library OpenCV (details about this library follow in the next subsection).
 A part of annotation and segmentation is done by the user. 
 They provide a possibility to scan the present QR codes for annotation proposals.
-There is a good coverage of tests but their test set consist of one image. 
+Currently, there is a good coverage of tests but their test set consist of one image.
 Apparently, an evaluation of efficiency of their actual algorithm was not suitable so the projects are very hard to compare.
 
-\subsection{Approaches based on Machine-learning}
+\subsection{Approaches based on Machine Learning}
 
-During the last years, there was great process in image analysis. 
+During the last years, there was great process and many projects in image analysis. 
 A lot of them are based on clustering algorithms which are very well suitable for either known numbers or sizes/shapes of objects \cite{Pappas}. 
 Others use learning algorithms which are usually trained with a large set of human-reviewed data to extract the most probable segmentations.
 One recent example for a rising technology is the use of neural networks \cite{turagal}.
 
-During Section \ref{sec_concepts}, we will explain why it would be very hard for our specific use case to gather a large training set.
+During Section \ref{sec_conclusion}, we will explain why it would be very hard for our specific use case to gather a large training set.
 
 \subsection{Current state of Computer Vision}
 
 Luckily, there are very sophisticated approaches of static image analysis based on different features of a single image.
 The most famous, free and open-source collection of such computer vision algorithm is OpenCV \cite{opencv_library}. 
-This library contains very advanced methods like the ``SURF'' algorithm as well as basic steps for image processing for threshold-based contour detection algorithms.
+This library contains very advanced tools and methods as well as basic steps for image processing for threshold-based contour detection algorithms.
 
-One particularly interesting part of this library implements a template matching algorithm. 
+One particularly interesting part of this library for this project implements a template matching algorithm. 
 It uses a predefined template that is applied on different positions to an image to find similar regions.
 The comparison of those regions to the template image can base on different factors like oriented gradients or distribution in luminosity/color.
