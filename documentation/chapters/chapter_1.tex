@@ -3,15 +3,15 @@
 \label{sec_introduction}
 
 The \emph{Museum für Naturkunde}, a natural history museum in Berlin, Germany, features an insect collection consisting of several million insect specimen.
-This collection is digitalized in the context of the museum's EoS project.
-Typically, the resulting images show multiple insect boxes  filled with insect specimen of the same species.
+This collection is digitalized in the context of the museum's \emph{Erschließung objektreicher Spezialsammlungen} (EoS) project.
+Typically, the resulting images show multiple insect boxes filled with insect specimen of the same species.
 On average, such an image is about 100 MB in size and contains about 50 specimen.
 
 This paper presents BugTracker \textendash{} a tool developed to annotate the museum's images of its insect collection with information about the location of each single specimen in the image and its biological classification.
-This supports the museum's work with those rather large images  enabling further use and processing of them.
-The main focus of the project can be found in the field of image processing to extract this extra information.
+This supports the museum's work with those rather large images enabling further use and processing of them.
+The main focus of the project can be found in the field of image processing to extract these extra information.
 
-The approach presented in this paper is based on template matching and allows the automatic annotation of insect images with semantic information.
+The approach presented in this paper is based on template matching and contour detection and allows the automatic annotation of insect specimen on images with semantic information.
 The algorithm itself consists of multiple stages and four main subtasks:
 
 \begin{description}

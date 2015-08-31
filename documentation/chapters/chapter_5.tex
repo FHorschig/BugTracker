@@ -90,26 +90,26 @@ In multiple steps, the following contours are thrown away:
 After these steps, we have reduced the number of found contours that are potential templates for our Template Matching.
 From the current set of potential templates, we extract one, which is representative for the insect species in that image.
 This is done by apply template matching to all of our potential templates against each other.
-The OpenCV matchTemplate function yields a score when matching a template against another image.
+The method \emph{matchTemplate} provided by OpenCV yields a score when matching a template against another image.
 The higher the score, the better the match.
-So when matching each potential template against each other, we sum up the scores that are yielded, so that in the end the potential template with the highest score is our actual extracted template.
+When matching each potential template against each other, we sum up the scores that are yielded, so that in the end the potential template with the highest score is our actual extracted template.
 This of course has the premise, that after reducing the set of potential templates, there are more candidates which are actual insects, than other stuff, like labels, or just dirt on the box.
 That is most of the time the case, but to not completely rely on that premise, we add multiple previously cropped out samples to the template matching process to improve the score of the templates that are actual insects.
-We also add negative samples, such as labels, which should reduce the score of unwanted templates.
+We also add negative samples, such as labels, which reduce the score of unwanted templates.
 After this process, we choose the potential template with the highest match score as our extracted template for our Template Matching step.
 
 \subsection{Annotations}
-The simplest annotation is just an RDF-triple locating a bug on an image and describing it as Organism. 
-The definition for an Organism and all properties we use to describe are part of the Darwin Core \footnote{http://rs.tdwg.org/dwc/} Standard of describing living organisms.
+The simplest annotation is just an RDF-triple locating a bug on an image and describing it as an organism. 
+The definition for an organism and all properties we use to describe are part of the \emph{Darwin Core} \footnote{http://rs.tdwg.org/dwc/} Standard of describing living organisms.
 
-We can extract further information from a CSV file that was provided by the Natural History Museum of Berlin.
-It contains a general overview of all species in a photograph. 
+We can extract further information from a CSV file that was provided by the \emph{Museum für Naturkunde} in Berlin.
+It contains a general overview of all species in a photograph.
 This includes dates and information about the family.
 
 Whenever a new bug is found, it is added to the collection of bugs that will be written as RDF file at the end.
 It is possible to annotate every bug with additional, specific properties (apart from those that apply to every insect in the box).
 
-Such information can be found in QR codes as described in the next section.
+Such information can be found in QR codes as described in the following section.
 
 \subsubsection{QR Code Analysis}
 
@@ -117,10 +117,10 @@ Such information can be found in QR codes as described in the next section.
 Due to the availability of each algorithm as single step in the pipeline, it was easy to execute them in the exact same environment with the exact same parameters. 
 Different from the usual pipeline, the step of selecting the examples was automated and the step of writing out RDF files was replaced by analyzing the discovered bugs.
 
-To have a reliable set of data (a ``gold standard''), we created annotations for some photos manually. 
-The photos were mainly taken randomly. 
+To have a reliable set of data, the ``gold standard'', we created annotations for some photos manually. 
+The photos were mainly taken randomly.
 In addition, we chose some photos which we found hard to analyze (due to transparent wings, difficult shapes or different sizes).
 
-The actual gold standard was not a set of RDF files but a collections of comma-separated values. 
+The actual gold standard was not a set of RDF files but a collection of comma-separated values. 
 These CSV files were easier to create (with a helping tool we wrote to manually annotate the bugs) and easier to analyze than RDF documents with same contents.
-The actual results, their effect on our process and how we could optimize the benchmarking process will be discussed in chapter \ref{sec_conclusion}.
+The actual results, their effect on our process and how we could optimize the benchmarking process will be discussed in section \ref{sec_conclusion}.
