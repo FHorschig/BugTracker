@@ -112,6 +112,8 @@ It is possible to annotate every bug with additional, specific properties (apart
 Such information can be found in QR codes as described in the following section.
 
 \subsubsection{QR Code Analysis}
+We use the python library \textit{zbar} to find and scan QR codes in the images.
+From the URL contained in the QR code, and the CSV file which was provided from the \emph{Museum für Naturkunde}, we can extract more specific species information like order and family.
 
 \subsection{Integrating Benchmarking}
 Due to the availability of each algorithm as single step in the pipeline, it was easy to execute them in the exact same environment with the exact same parameters. 
