@@ -127,7 +127,13 @@ class Reference(object):
     @staticmethod
     def __is_similar(rect, another):
         """ Returns true if the rects are of similar size and position. """
-        x_tolerance = Reference.TOLERANCE * max(rect[2], another[2])
-        y_tolerance = Reference.TOLERANCE * max(rect[3], another[3])
-        return  abs(rect[0] - another[0]) < x_tolerance and \
-                abs(rect[1] - another[1]) < y_tolerance
+        area1 = rect[2]*rect[3]
+        area2 = another[2]*another[3]
+        intersect_width = min(rect[0]+rect[2], another[0]+another[2]) - max(rect[0],another[0])
+        if not intersect_width > 0:
+            return False
+        intersect_height = min(rect[1]+rect[3], another[1]+another[3]) - max(rect[1],another[1])
+        if not intersect_height > 0:
+            return False
+        intersect_area = intersect_width * intersect_height
+        return (float(intersect_area) / float(min(area1,area2))) > 0.7
