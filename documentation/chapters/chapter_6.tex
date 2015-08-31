@@ -25,7 +25,7 @@ Running the benchmark on our test set yields the following results:
 	\item[F-Measure] 0.81
 \end{description}
 %
-The used method consisted of the automated template extraction by contour detection, followed by a template matching with the extracted template.
+The used method consists of the automated template extraction by contour detection, followed by a template matching with the extracted template.
 
 In our test set we have images of well-shaped insects, like butterflies, and different bugs,
 but also images of border cases, like insects with transparent wings, stick insects, or insects which are missing some parts of their body.
@@ -38,6 +38,27 @@ Using a slightly smaller test set, where we only use the common cases, we can ac
 	\item[F-Measure] 0.94
 \end{description}
 %
+\subsection{Discussion}
+When executing the benchmark, there is an option to enable a mode to see the evaluated image.
+By showing all false and true positives and true negatives it is possible to see what causes the resulting numbers.
+The main problem for not having 100\% lies in the diversity of the insects:
+Butterflies of the same class often have differing patterns on their wings.
+Also differences in color and size are serious, especially between male and female ones of the same species.
+Another problem is the condition of the insects:
+Some animals have missing parts like wings or legs or they differ in the folding of their wings.
+Furthermore sometimes the insects are aligned horizontally and sometimes vertically in one box, so that the template won't find all insects of one alignment.
+The first box in Figure \ref{fig:diverse} shows such a high diversity like missing wings.
+
+The condition of the box where the insects are in is another influence on the result.
+Sometimes the background of the images has dirt on it, that makes it hard to find a difference to the insects, especially if they have transparent parts like in the second box of Figure \ref{fig:diverse}
+
+\begin{center}
+	\includegraphics[width=1\textwidth]{images/diversity_dirt.jpg}
+	\captionof{figure}{High diversity in one box and dirt in the other one}
+	\label{fig:diverse}
+\end{center}
+All these points make it hard to have a result close to 100\%.
+But an F-measure of 94\% is still a very good result and even 81\% with a lot of edge cases is pretty good.
 
 \subsection{Machine Learning}
 As described in Section \ref{sec_concepts}, using an SVM is a Machine Learning approach on classification of images.
@@ -46,5 +67,14 @@ We did not use it in our final method, since a really big training data set is r
 But given proper training data, an SVM would be a valid classification method.
 
 \subsection{Future Work}
+Since we can get the classification of the specimen in a picture out of the QR-code, it should be possible to improve the template extraction.
+If there is an online-service for getting images of insects by their name, the result of the automated template extraction could be verified on a much more precise level.
 
+Another idea is to have a feedback for the user to show him critical findings or pictures with no matches at all.
+Furthermore before processing all images, the software could just generate all templates and show suspect ones to the user to verify if it is a good template or just a label or QR-Code.
 
+In a separate preprocessing step it can be useful to remove all labels and QR-codes from the image before looking for a template.
+We spend a lot of time at this, but found no satisfying results without deleting true positives.
+
+As mentioned before, with the help of a large trainings set, Machine Learning could be an interesting method to verify findings or to improve the segmentation.
+Such training sets could be gathered from other sources, where an annotation already has been done.
