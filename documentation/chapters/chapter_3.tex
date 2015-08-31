@@ -2,4 +2,28 @@
 \section{Motivation}
 \label{sec_motivation}
 
+In the following, the motivation for the BugTracker project is described. 
+The main idea is to support the digitalization of an insect collection by creating an automated tool that allows to annotate thousands of images.
+Existing tools and algorithms are explored in order to reuse them, and eventually combined for the best results. The four aspects in detail:
 
+\paragraph{Support digitalization}
+The EoS project of the \emph{Museum für Naturkunde Berlin} is aimed at digitalizing the museum's insect collection.
+The BugTracker tool allows to support this process by providing additional information about the data such as the position of a single insect in an image.
+
+Further, the QR codes in each image provide information about the taxonomic classification of those insects.
+So far, for each image, included species are known but annotating each insect and linking it to QR code information offers more details about it. 
+
+\paragraph{Automatic Annotation Process}
+The EoS project resulted in a few thousand images of insects.
+In order to support annotating this amount of images, it is important to develop a tool that completely automates the annotation process.
+This includes everything from reading an image, processing the image and its meta data, up to creating the rdf annotations.
+
+\paragraph{Reuse Existing Tools and Algorithms}
+The development of the BugTracker tool was part of a university project over the span of one semester. 
+In turn, to create a well-suited tool in this amount of time, it is important to explore and reuse already existing tools and algorithms instead of implementing everything from scratch.
+
+\paragraph{Combined Algorithm}
+Single algorithms lead to great results for some images.
+Unfortunately, the same algorithms fail for others kinds of images.
+As single algorithms were not able to lead to satisfying results, different image processing algorithms were used for automatic template extraction and the following template matching.
+This combined approach is supposed to leverage the advantages of more than one algorithm to yield better results.

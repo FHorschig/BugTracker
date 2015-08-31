@@ -7,11 +7,12 @@ This collection is digitalized in the context of the museum's EoS project.
 Typically, the resulting images show multiple insect boxes  filled with insect specimen of the same species.
 On average, such an image is about 100 MB in size and contains about 50 specimen.
 
-In this paper, we present BugTracker, a tool developed to annotate the museum's insect collection images with information about the location of each single specimen in the image and what type of insect it is.
-This should support the museum's work with those rather large images in order to use and further process them.
+This paper presents BugTracker \textendash{} a tool developed to annotate the museum's images of its insect collection with information about the location of each single specimen in the image and its biological classification.
+This supports the museum's work with those rather large images  enabling further use and processing of them.
+The main focus of the project can be found in the field of image processing to extract this extra information.
 
-The paper presents an approach based on template matching that allows the automatic annotation of insect images with semantic information.
-The algorithm itself is a multi-staged approach consisting of four main subtasks:
+The approach presented in this paper is based on template matching and allows the automatic annotation of insect images with semantic information.
+The algorithm itself consists of multiple stages and four main subtasks:
 
 \begin{description}
     \item[Contour detection] to automatically generate template candidates and extract one of them as the actual template
@@ -23,7 +24,7 @@ The algorithm itself is a multi-staged approach consisting of four main subtasks
 This work is created in the context of the \emph{Semantic Multimedia Technologies} seminar during the summer semester 2015 at the Hasso Plattner Institute, University of Potsdam, Germany.
 
 The remainder of this paper is structured as follows. 
-Section \ref{sec_related} highlights related work.
-The motivation for this work is presented in section \ref{sec_motivation} and detailed information about the implementation are described in the next section.
-The results are evaluated in section \ref{sec_eval}.
-In the last section we draw a conclusion and discuss it.
+Section~\ref{sec_related} highlights related work.
+The motivation for this work is presented in section~\ref{sec_motivation} and detailed information about the implementation are described in the next section.
+The results are evaluated in section~\ref{sec_eval}.
+In the last section, a conclusion is drawn and discussed.
