@@ -112,6 +112,8 @@ It is possible to annotate every bug with additional, specific properties.
 Such information can be found in QR codes as described in the following section.
 
 \subsubsection{QR Code Analysis}
+We use the python library \textit{zbar} to find and scan QR codes in the images.
+From the URL contained in the QR code, and the CSV file which was provided from the \emph{Museum für Naturkunde}, we can extract more specific species information like order and family.
 
 Typically, each image contains multiple insect boxes with their own QR code that encodes a species specific URI.
 We can link this URI to further information, which is basically the taxonomic classification of a bug, such as a its order, genus, and species.

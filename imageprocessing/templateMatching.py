@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 
 class Framegroup(object):
-
+    """Helper class to manage found templates"""
     def __init__(self):
         self.left, self.right, self.top, self.bottom, self.width, self.height = 0.0,0.0,0.0,0.0,0.0,0.0
         self.show_point = (0,0)
@@ -43,10 +43,9 @@ class Framegroup(object):
 
 
 class TemplateMatching(object):
+    """Uses thresholding and contour detection to segment given image."""
 
     def __init__(self):
-        # self.multiscalefactors = [0.5, 0.9, 1.0, 1.2, 1.5]
-        # self.multiscalefactors = [0.7, 1.0, 1.3]
         self.multiscalefactors = [1.0]
 
     def process(self, annotator, io_helper, demo):
@@ -56,7 +55,8 @@ class TemplateMatching(object):
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
         img_bgr = img.copy()
-        
+
+        # Calculate color histogram of image
         bgMax = [0]*3
         for i,col in enumerate(('b','g','r')):
             histr = cv2.calcHist([img_bgr],[i],None,[256],[0,256])
@@ -71,32 +71,29 @@ class TemplateMatching(object):
         img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
         img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
         img_gray_scikit = color.rgb2gray(img_rgb)
-        # template = cv2.imread(io_helper.template(),0)
+
+        # Get template from Thresholding class
         thresh = Thresholding()
         template_bgr = thresh.extractTemplate(img, demo)
         template_rgb = cv2.cvtColor(template_bgr, cv2.COLOR_BGR2RGB)
         template_gray = cv2.cvtColor(template_bgr, cv2.COLOR_BGR2GRAY)
         template_gray_scikit = color.rgb2gray(template_rgb)
-        # cv2.imshow('Image', template_bgr)
-        # cv2.waitKey()
 
+        # Histogram of Oriented Gradients
         fd_tmp, _ = hog(template_gray_scikit, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(1, 1), visualise=True)
         fd_tmp = fd_tmp / np.linalg.norm(fd_tmp)
 
         w, h = template_gray.shape[::-1]
-        
+
+        # Match template to image and remove overlapping frames
         frame_groups = []
         for factor in self.multiscalefactors:
             scaledW = int(w * factor)
             scaledH = int(h * factor)
-
             scaledTemplate = cv2.resize(template_gray, (scaledW, scaledH))
-
             res = cv2.matchTemplate(img_gray, scaledTemplate, eval(methods[1]))
-
             threshold = 0.41
             loc = np.where(res >= threshold)
-
             points = zip(*loc[::-1])
 
             for p in points:
@@ -114,10 +111,9 @@ class TemplateMatching(object):
                     new_frame_group.add(p, scaledW, scaledH, res[p[1], p[0]])
                     frame_groups.append(new_frame_group)
 
+        # Use Histogram of Oriented Gradients and color histogram to improve results
         pow_diff = lambda x,y : np.power(x-y, 2)
-
         final_frame_groups = []
-
         for frame_group in frame_groups:
             roi = img_gray_scikit[frame_group.top:frame_group.bottom , frame_group.left:frame_group.right]
             roi2 = img_bgr[frame_group.top:frame_group.bottom , frame_group.left:frame_group.right]
@@ -127,7 +123,7 @@ class TemplateMatching(object):
             fd = fd / np.linalg.norm(fd)
 
             res = np.sqrt(sum(map(pow_diff, fd, fd_tmp)))
-            
+
             bgAvg = [0]*3
             for i,col in enumerate(('b','g','r')):
                 histr = cv2.calcHist([roi2],[i],None,[256],[0,256])
@@ -145,9 +141,7 @@ class TemplateMatching(object):
             if res < 0.95 and not isBackGround:
                 final_frame_groups.append(frame_group)
 
-            # cv2.imshow('Image', roi)
-            # cv2.waitKey()
-
+        # Add results to Annotator
         for frame_group in final_frame_groups:
             point = frame_group.show_point
             annotator.add_bug(point[0], point[1], frame_group.width, frame_group.height)
@@ -157,7 +151,7 @@ class TemplateMatching(object):
 
 
 class TemplateMatchingWithThresholding(object):
-
+    """Not continued approach"""
     def process(self, annotator, iohelper):
         img = cv2.imread(iohelper.thumbnail())
         image = img.copy()
