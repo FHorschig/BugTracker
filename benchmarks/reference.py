@@ -118,8 +118,9 @@ class Reference(object):
     @staticmethod
     def __has_similar_rect(rect, rect_list):
         """ Returns true if the list contains a similar rect. """
-        for ref in rect_list:
-            if Reference.__is_similar(ref, rect):
+        for i in reversed(range(len(rect_list))):
+            if Reference.__is_similar(rect_list[i], rect):
+                del(rect_list[i])
                 return True
         return False
 
