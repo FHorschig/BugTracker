@@ -1,12 +1,38 @@
 %
-\section{Conclusion and Discussion}
+\section{Evaluation and Discussion}
+\label{sec_eval}
 \label{sec_conclusion}
 
-\subsection{Optimizing the Template}
-\subsection{Machine Learning?}
-\subsection{Sources for Meta Information}
-Sten?
-where from? (QR, provided file, crawling webpages)
+\subsection{Benchmarks}
+To evaluate our tool, we created a benchmark set containing several images where we manually marked the insects.
+The result of one benchmark run is expressed as \textit{Recall}, \textit{Precision}, and \textit{F-Measure} \cite{f_measure}.
+Although F-Measure is a very common way to measure the quality of results, we consider changing  to another method that puts a higher weight on the quantity of results. 
+Usually, it would be easier to refine existing results than to find additional insects. 
+Also, when looking for false positives, it is possible that true positives are found because the bounding box did not fit correctly.
+However, it is more useful to see an image of multiple insects or a cropped insect instead of no result at all.
 
-how could it benefit US? (get templates from meta data)
+The test set is crucial for the accuracy of the benchmark. 
+It is always good to have a large test set to improve the accuracy of the benchmark.
+Therefore continuous extending of the test set is needed. 
+
+\subsection{Results}
+
+Running the benchmark on our test set yields the following results:
+%
+\begin{description}
+	\item[Recall] 0.63
+	\item[Precision] 0.67
+	\item[F-Measure] 0.65
+\end{description}
+%
+The used method consisted of the automated template extraction by contour detection, followed by a template matching with the extracted template.
+
+\subsection{Machine Learning}
+As described in Section \ref{sec_concepts}, using an SVM is a Machine Learning approach on classification of images.
+In the process of developing our tool, we also implemented a SVM, to see if it fits our purposes.
+We did not use it in our final method, since a really big training data set is required, which we did not have at that time.
+But given proper training data, an SVM would be a valid classification method.
+
+\subsection{Future Work}
+
 
