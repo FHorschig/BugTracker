@@ -20,12 +20,24 @@ Therefore continuous extending of the test set is needed.
 Running the benchmark on our test set yields the following results:
 %
 \begin{description}
-	\item[Recall] 0.63
-	\item[Precision] 0.67
-	\item[F-Measure] 0.65
+	\item[Recall] 0.82
+	\item[Precision] 0.80
+	\item[F-Measure] 0.81
 \end{description}
 %
 The used method consisted of the automated template extraction by contour detection, followed by a template matching with the extracted template.
+
+In our test set we have images of well-shaped insects, like butterflies, and different bugs,
+but also images of border cases, like insects with transparent wings, stick insects, or insects which are missing some parts of their body.
+Those border cases cause a worsening of our benchmark results.
+Using a slightly smaller test set, where we only use the common cases, we can achieve much better results:
+%
+\begin{description}
+	\item[Recall] 0.90
+	\item[Precision] 0.97
+	\item[F-Measure] 0.94
+\end{description}
+%
 
 \subsection{Machine Learning}
 As described in Section \ref{sec_concepts}, using an SVM is a Machine Learning approach on classification of images.
