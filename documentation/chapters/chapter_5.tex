@@ -107,11 +107,27 @@ It contains a general overview of all species in a photograph.
 This includes dates and information about the family.
 
 Whenever a new bug is found, it is added to the collection of bugs that will be written as RDF file at the end.
-It is possible to annotate every bug with additional, specific properties (apart from those that apply to every insect in the box).
+It is possible to annotate every bug with additional, specific properties.
 
 Such information can be found in QR codes as described in the following section.
 
 \subsubsection{QR Code Analysis}
+
+Typically, each image contains multiple insect boxes with their own QR code that encodes a species specific URI.
+We can link this URI to further information, which is basically the taxonomic classification of a bug, such as a its order, genus, and species.
+
+To locate QR codes in an image, we use the \emph{ZBar} library \footnote{http://zbar.sourceforge.net/}.
+This Python library allows to obtain various bar codes from images and supports multiple types of bar codes.
+It is also used by the \emph{Inselect} project to search and decode QR codes.
+\emph{ZBar} locates and decodes QR codes, which returns the species URI in our case.
+
+Once we have this URI, we can lookup the associated taxonomic data from a CSV file provided by the \emph{Museum für Naturkunde}.
+
+The mapping from a found bug to its QR code proved to be more difficult than expected because of varying box layouts.
+As there was no algorithm that matched everything correctly, we alternated the annotation approach to specify the taxonomic information that is common to all bugs.
+The alternative would be an imperfect matching algorithm that  provides more detailed information for some bugs but also introduces errors.
+We favor first approach because we agreed it is easier to add more detailed information than fixing an unknown number of introduced errors at a later point.
+
 
 \subsection{Integrating Benchmarking}
 Due to the availability of each algorithm as single step in the pipeline, it was easy to execute them in the exact same environment with the exact same parameters. 
